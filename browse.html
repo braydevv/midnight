@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>browse - midnight</title>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/pages.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="fonts/fontawesome/css/all.min.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <img src="https://via.placeholder.com/150x40/0a1a2f/ffffff?text=midnight" alt="Midnight Logo">
+      </div>
+      
+      <div class="sidebar-sections">
+        <!-- Main Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">main</div>
+          <a href="index.html" class="nav-link" data-page="index">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div class="nav-text">homepage</div>
+          </a>
+          <a href="dashboard.html" class="nav-link" data-page="dashboard">
+            <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+            <div class="nav-text">dashboard</div>
+          </a>
+          <a href="games.html" class="nav-link" data-page="games">
+            <div class="nav-icon"><i class="fas fa-gamepad"></i></div>
+            <div class="nav-text">games</div>
+          </a>
+          <a href="browse.html" class="nav-link" data-page="browse">
+            <div class="nav-icon"><i class="fas fa-globe"></i></div>
+            <div class="nav-text">browse</div>
+          </a>
+        </div>
+        
+        <!-- Divider -->
+        <div class="sidebar-divider"></div>
+        
+        <!-- Secondary Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">extras</div>
+          <a href="music.html" class="nav-link" data-page="music">
+            <div class="nav-icon"><i class="fas fa-music"></i></div>
+            <div class="nav-text">music</div>
+          </a>
+          <a href="movies.html" class="nav-link" data-page="movies">
+            <div class="nav-icon"><i class="fas fa-film"></i></div>
+            <div class="nav-text">movies</div>
+          </a>
+          <a href="ai.html" class="nav-link" data-page="ai">
+            <div class="nav-icon"><i class="fas fa-robot"></i></div>
+            <div class="nav-text">ai</div>
+          </a>
+          <a href="vm.html" class="nav-link" data-page="vm">
+            <div class="nav-icon"><i class="fas fa-desktop"></i></div>
+            <div class="nav-text">vm</div>
+          </a>
+          <a href="settings.html" class="nav-link" data-page="settings">
+            <div class="nav-icon"><i class="fas fa-cog"></i></div>
+            <div class="nav-text">settings</div>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="footer-icon"><i class="fas fa-th"></i></div>
+        <div class="footer-icon"><i class="fab fa-discord"></i></div>
+        <div class="footer-icon"><i class="fas fa-bell"></i></div>
+      </div>
+    </nav>
+    
+    <!-- Mobile Toggle Button -->
+    <div class="mobile-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="content">
+      <div class="browser-container">
+        <!-- Browser Header with Tabs -->
+        <div class="browser-header">
+          <div class="browser-tabs">
+            <!-- Tabs will be created via JavaScript -->
+            <div class="browser-tab active">
+              <span class="browser-tab-title">New Tab</span>
+              <span class="browser-tab-close"><i class="fas fa-times"></i></span>
+            </div>
+            <div class="browser-new-tab">
+              <i class="fas fa-plus"></i>
+            </div>
+          </div>
+          <div class="browser-controls">
+            <div class="browser-control browser-refresh">
+              <i class="fas fa-redo-alt"></i>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Browser Address Bar -->
+        <div class="browser-address-bar">
+          <div class="browser-control browser-back">
+            <i class="fas fa-arrow-left"></i>
+          </div>
+          <div class="browser-control browser-forward">
+            <i class="fas fa-arrow-right"></i>
+          </div>
+          <input type="text" class="browser-url" placeholder="search or enter website url">
+          <div class="browser-menu">
+            <i class="fas fa-ellipsis-v"></i>
+          </div>
+        </div>
+        
+        <!-- Browser Content -->
+        <div class="browser-content">
+          <div class="browser-loading"></div>
+          <iframe class="browser-iframe" src="about:blank"></iframe>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- JavaScript Files -->
+  <script src="js/main.js"></script>
+  <script src="js/snow.js"></script>
+</body>
+</html>
