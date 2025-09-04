@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dashboard - midnight</title>
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/pages.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="fonts/fontawesome/css/all.min.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+      <div class="sidebar-logo">
+        <img src="https://via.placeholder.com/150x40/0a1a2f/ffffff?text=midnight" alt="Midnight Logo">
+      </div>
+      
+      <div class="sidebar-sections">
+        <!-- Main Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">main</div>
+          <a href="index.html" class="nav-link" data-page="index">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div class="nav-text">homepage</div>
+          </a>
+          <a href="dashboard.html" class="nav-link" data-page="dashboard">
+            <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+            <div class="nav-text">dashboard</div>
+          </a>
+          <a href="games.html" class="nav-link" data-page="games">
+            <div class="nav-icon"><i class="fas fa-gamepad"></i></div>
+            <div class="nav-text">games</div>
+          </a>
+          <a href="browse.html" class="nav-link" data-page="browse">
+            <div class="nav-icon"><i class="fas fa-globe"></i></div>
+            <div class="nav-text">browse</div>
+          </a>
+        </div>
+        
+        <!-- Divider -->
+        <div class="sidebar-divider"></div>
+        
+        <!-- Secondary Section -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">extras</div>
+          <a href="music.html" class="nav-link" data-page="music">
+            <div class="nav-icon"><i class="fas fa-music"></i></div>
+            <div class="nav-text">music</div>
+          </a>
+          <a href="movies.html" class="nav-link" data-page="movies">
+            <div class="nav-icon"><i class="fas fa-film"></i></div>
+            <div class="nav-text">movies</div>
+          </a>
+          <a href="ai.html" class="nav-link" data-page="ai">
+            <div class="nav-icon"><i class="fas fa-robot"></i></div>
+            <div class="nav-text">ai</div>
+          </a>
+          <a href="vm.html" class="nav-link" data-page="vm">
+            <div class="nav-icon"><i class="fas fa-desktop"></i></div>
+            <div class="nav-text">vm</div>
+          </a>
+          <a href="settings.html" class="nav-link" data-page="settings">
+            <div class="nav-icon"><i class="fas fa-cog"></i></div>
+            <div class="nav-text">settings</div>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="footer-icon"><i class="fas fa-th"></i></div>
+        <div class="footer-icon"><i class="fab fa-discord"></i></div>
+        <div class="footer-icon"><i class="fas fa-bell"></i></div>
+      </div>
+    </nav>
+    
+    <!-- Mobile Toggle Button -->
+    <div class="mobile-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="content">
+      <div class="page-header">
+        <h1 class="page-title">dashboard</h1>
+        <p class="page-description">your midnight hub overview</p>
+      </div>
+      
+      <!-- Dashboard Grid -->
+      <div class="dashboard-grid">
+        <!-- Activity Card -->
+        <div class="card dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">activity</h3>
+            <div class="dashboard-card-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+          </div>
+          <div class="dashboard-card-content">
+            <div class="dashboard-stat">42</div>
+            <div class="dashboard-stat-label">games played this week</div>
+          </div>
+        </div>
+        
+        <!-- Favorites Card -->
+        <div class="card dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">favorites</h3>
+            <div class="dashboard-card-icon">
+              <i class="fas fa-star"></i>
+            </div>
+          </div>
+          <div class="dashboard-card-content">
+            <div class="dashboard-stat">12</div>
+            <div class="dashboard-stat-label">items in your favorites</div>
+          </div>
+        </div>
+        
+        <!-- Recent Card -->
+        <div class="card dashboard-card">
+          <div class="dashboard-card-header">
+            <h3 class="dashboard-card-title">recent</h3>
+            <div class="dashboard-card-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+          </div>
+          <div class="dashboard-card-content">
+            <div class="dashboard-stat">5</div>
+            <div class="dashboard-stat-label">recently played games</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Shortcuts Section -->
+      <div class="card" style="margin-top: 20px;">
+        <h3 class="card-title">quick shortcuts</h3>
+        <div class="dashboard-shortcuts">
+          <div class="dashboard-shortcut">
+            <div class="dashboard-shortcut-icon">
+              <i class="fas fa-gamepad"></i>
+            </div>
+            <div class="dashboard-shortcut-label">games</div>
+          </div>
+          <div class="dashboard-shortcut">
+            <div class="dashboard-shortcut-icon">
+              <i class="fas fa-film"></i>
+            </div>
+            <div class="dashboard-shortcut-label">movies</div>
+          </div>
+          <div class="dashboard-shortcut">
+            <div class="dashboard-shortcut-icon">
+              <i class="fas fa-music"></i>
+            </div>
+            <div class="dashboard-shortcut-label">music</div>
+          </div>
+          <div class="dashboard-shortcut">
+            <div class="dashboard-shortcut-icon">
+              <i class="fas fa-globe"></i>
+            </div>
+            <div class="dashboard-shortcut-label">browse</div>
+          </div>
+          <div class="dashboard-shortcut">
+            <div class="dashboard-shortcut-icon">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div class="dashboard-shortcut-label">ai</div>
+          </div>
+          <div class="dashboard-shortcut">
+            <div class="dashboard-shortcut-icon">
+              <i class="fas fa-cog"></i>
+            </div>
+            <div class="dashboard-shortcut-label">settings</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recent Activity -->
+      <div class="card" style="margin-top: 20px;">
+        <h3 class="card-title">recent activity</h3>
+        <div class="announcements-list">
+          <div class="announcement-item">
+            <div class="announcement-date">today</div>
+            <div class="announcement-title">played cosmic adventure</div>
+            <div class="announcement-content">reached level 5</div>
+          </div>
+          <div class="announcement-item">
+            <div class="announcement-date">yesterday</div>
+            <div class="announcement-title">watched midnight chase</div>
+            <div class="announcement-content">watched for 45 minutes</div>
+          </div>
+          <div class="announcement-item">
+            <div class="announcement-date">2 days ago</div>
+            <div class="announcement-title">listened to electronic dreams</div>
+            <div class="announcement-content">added to favorites</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- JavaScript Files -->
+  <script src="js/main.js"></script>
+  <script src="js/snow.js"></script>
+</body>
+</html>
