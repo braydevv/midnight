@@ -1,0 +1,183 @@
+/* Midnight - Ultimate Unblocked Hub */
+/* Base Styles and Theme System */
+
+/* Font Import */
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/inter/Inter Web/Inter-Bold.woff2') format('woff2'),
+       url('../fonts/inter/Inter Web/Inter-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/inter/Inter Web/Inter-Regular.woff2') format('woff2'),
+       url('../fonts/inter/Inter Web/Inter-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* CSS Variables for Themes */
+:root {
+  /* Default Theme (Black/Blue) */
+  --primary-bg: linear-gradient(135deg, #000000 0%, #0a1a2f 100%);
+  --secondary-bg: #0a1a2f;
+  --accent-color: #1e90ff;
+  --text-color: #ffffff;
+  --sidebar-bg: rgba(10, 26, 47, 0.9);
+  --sidebar-hover: rgba(30, 144, 255, 0.2);
+  --card-bg: rgba(10, 26, 47, 0.7);
+  --border-color: rgba(30, 144, 255, 0.3);
+  
+  /* UI Constants */
+  --sidebar-width-collapsed: 60px;
+  --sidebar-width-expanded: 220px;
+  --sidebar-transition: 0.3s ease-in-out;
+  --border-radius: 10px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition-speed: 0.3s;
+}
+
+/* Theme Classes */
+body.theme-pink {
+  --primary-bg: linear-gradient(135deg, #2a1a2f 0%, #ff9ad5 100%);
+  --secondary-bg: #ff9ad5;
+  --accent-color: #ff6eb4;
+  --sidebar-bg: rgba(42, 26, 47, 0.9);
+  --sidebar-hover: rgba(255, 110, 180, 0.2);
+  --card-bg: rgba(42, 26, 47, 0.7);
+  --border-color: rgba(255, 110, 180, 0.3);
+}
+
+body.theme-blue {
+  --primary-bg: linear-gradient(135deg, #1a2a3f 0%, #90c1ff 100%);
+  --secondary-bg: #90c1ff;
+  --accent-color: #6eb4ff;
+  --sidebar-bg: rgba(26, 42, 63, 0.9);
+  --sidebar-hover: rgba(110, 180, 255, 0.2);
+  --card-bg: rgba(26, 42, 63, 0.7);
+  --border-color: rgba(110, 180, 255, 0.3);
+}
+
+body.theme-green {
+  --primary-bg: linear-gradient(135deg, #1a2f1a 0%, #90ffa9 100%);
+  --secondary-bg: #90ffa9;
+  --accent-color: #6eff8d;
+  --sidebar-bg: rgba(26, 47, 26, 0.9);
+  --sidebar-hover: rgba(110, 255, 141, 0.2);
+  --card-bg: rgba(26, 47, 26, 0.7);
+  --border-color: rgba(110, 255, 141, 0.3);
+}
+
+body.theme-tan {
+  --primary-bg: linear-gradient(135deg, #2f2a1a 0%, #ffd890 100%);
+  --secondary-bg: #ffd890;
+  --accent-color: #ffc66e;
+  --sidebar-bg: rgba(47, 42, 26, 0.9);
+  --sidebar-hover: rgba(255, 198, 110, 0.2);
+  --card-bg: rgba(47, 42, 26, 0.7);
+  --border-color: rgba(255, 198, 110, 0.3);
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  text-transform: lowercase;
+  font-weight: bold;
+}
+
+body {
+  background: var(--primary-bg);
+  color: var(--text-color);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+button {
+  background: var(--accent-color);
+  color: var(--text-color);
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: bold;
+  transition: all var(--transition-speed);
+}
+
+button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Layout */
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  margin-left: var(--sidebar-width-collapsed);
+  padding: 20px;
+  transition: margin-left var(--sidebar-transition);
+}
+
+/* Utility Classes */
+.hidden {
+  display: none;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-10 {
+  gap: 10px;
+}
+
+.gap-20 {
+  gap: 20px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Snow Animation */
+.snowflake {
+  position: fixed;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+}
