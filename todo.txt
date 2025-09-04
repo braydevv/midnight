@@ -1,0 +1,1463 @@
+good, but make the clock flip animation fade in not flip, make the snow particles fall all the time and never stop unless you turn them off in settings, remove the sidebar scrollbar at the bottom. make the sidebar 3 square buttons at the bottom open a smooth organized popup with the stuff it needs. remove the text from the theme changer it will just be the colors, add a mystery theme that has a question mark and a red blurred background and its a xmas theme, it has a pastel red background with snow particles and Christmas stuff! and on the homepage it replaces the clock for until how many days until xmas real time for the user, make the clock real time not military time. add smooth rain and smooth space particle settings too. use these apis for all the stuff: https://www.themoviedb.org/ api access key: eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhZTQ0YWM5ODVjODE5YTVhZjhhY2IxZTY1NjQ2NDViZiIsIm5iZiI6MTc1NzAyMTk2My4yNTIsInN1YiI6IjY4YmEwNzBiZGM5Mzk1MDc1ZjhjZTA3OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Cy4bNepgbwr4rsY_v3Sp_jOPCClEeN1VPqmYgBn-94M api key: ae44ac985c819a5af8acb1e6564645bf add all the movies from it with their posters and titles when clicked it goes to the movie page (not a new link same page) with the movie that it has with the midnight sidebar in it make it not go to a link and its still on the same page. and for the movies and music add a search bar that works. use this for the music: YouTube Player API Reference for iframe Embeds
+
+bookmark_border
+Stay organized with collections
+Save and categorize content based on your preferences.
+Dismiss
+Got it
+
+
+
+The IFrame player API lets you embed a YouTube video player on your website and control the player using JavaScript.
+
+Using the API's JavaScript functions, you can queue videos for playback; play, pause, or stop those videos; adjust the player volume; or retrieve information about the video being played. You can also add event listeners that will execute in response to certain player events, such as a player state change.
+
+This guide explains how to use the IFrame API. It identifies the different types of events that the API can send and explains how to write event listeners to respond to those events. It also details the different JavaScript functions that you can call to control the video player as well as the player parameters you can use to further customize the player.
+
+Requirements
+The user's browser must support the HTML5 postMessage feature. Most modern browsers support postMessage.
+
+Embedded players must have a viewport that is at least 200px by 200px. If the player displays controls, it must be large enough to fully display the controls without shrinking the viewport below the minimum size. We recommend 16:9 players be at least 480 pixels wide and 270 pixels tall.
+
+Any web page that uses the IFrame API must also implement the following JavaScript function:
+
+onYouTubeIframeAPIReady – The API will call this function when the page has finished downloading the JavaScript for the player API, which enables you to then use the API on your page. Thus, this function might create the player objects that you want to display when the page loads.
+
+Getting started
+The sample HTML page below creates an embedded player that will load a video, play it for six seconds, and then stop the playback. The numbered comments in the HTML are explained in the list below the example.
+
+
+<!DOCTYPE html>
+<html>
+  <body>
+    <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
+    <div id="player"></div>
+
+    <script>
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '390',
+          width: '640',
+          videoId: 'M7lc1UVf-VE',
+          playerVars: {
+            'playsinline': 1
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+
+      // 4. The API will call this function when the video player is ready.
+      function onPlayerReady(event) {
+        event.target.playVideo();
+      }
+
+      // 5. The API calls this function when the player's state changes.
+      //    The function indicates that when playing a video (state=1),
+      //    the player should play for six seconds and then stop.
+      var done = false;
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+          setTimeout(stopVideo, 6000);
+          done = true;
+        }
+      }
+      function stopVideo() {
+        player.stopVideo();
+      }
+    </script>
+  </body>
+</html>
+The following list provides more details about the sample above:
+
+The <div> tag in this section identifies the location on the page where the IFrame API will place the video player. The constructor for the player object, which is described in the Loading a video player section, identifies the <div> tag by its id to ensure that the API places the <iframe> in the proper location. Specifically, the IFrame API will replace the <div> tag with the <iframe> tag.
+
+As an alternative, you could also put the <iframe> element directly on the page. The Loading a video player section explains how to do so.
+
+The code in this section loads the IFrame Player API JavaScript code. The example uses DOM modification to download the API code to ensure that the code is retrieved asynchronously. (The <script> tag's async attribute, which also enables asynchronous downloads, is not yet supported in all modern browsers as discussed in this Stack Overflow answer.
+
+The onYouTubeIframeAPIReady function will execute as soon as the player API code downloads. This portion of the code defines a global variable, player, which refers to the video player you are embedding, and the function then constructs the video player object.
+
+The onPlayerReady function will execute when the onReady event fires. In this example, the function indicates that when the video player is ready, it should begin to play.
+
+The API will call the onPlayerStateChange function when the player's state changes, which may indicate that the player is playing, paused, finished, and so forth. The function indicates that when the player state is 1 (playing), the player should play for six seconds and then call the stopVideo function to stop the video.
+
+Loading a video player
+After the API's JavaScript code loads, the API will call the onYouTubeIframeAPIReady function, at which point you can construct a YT.Player object to insert a video player on your page. The HTML excerpt below shows the onYouTubeIframeAPIReady function from the example above:
+
+
+var player;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('player', {
+    height: '390',
+    width: '640',
+    videoId: 'M7lc1UVf-VE',
+    playerVars: {
+      'playsinline': 1
+    },
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+The constructor for the video player specifies the following parameters:
+
+The first parameter specifies either the DOM element or the id of the HTML element where the API will insert the <iframe> tag containing the player.
+
+The IFrame API will replace the specified element with the <iframe> element containing the player. This could affect the layout of your page if the element being replaced has a different display style than the inserted <iframe> element. By default, an <iframe> displays as an inline-block element.
+
+The second parameter is an object that specifies player options. The object contains the following properties:
+width (number) – The width of the video player. The default value is 640.
+height (number) – The height of the video player. The default value is 390.
+videoId (string) – The YouTube video ID that identifies the video that the player will load.
+playerVars (object) – The object's properties identify player parameters that can be used to customize the player.
+events (object) – The object's properties identify the events that the API fires and the functions (event listeners) that the API will call when those events occur. In the example, the constructor indicates that the onPlayerReady function will execute when the onReady event fires and that the onPlayerStateChange function will execute when the onStateChange event fires.
+As mentioned in the Getting started section, instead of writing an empty <div> element on your page, which the player API's JavaScript code will then replace with an <iframe> element, you could create the <iframe> tag yourself. The first example in the Examples section shows how to do this.
+
+
+<iframe id="player" type="text/html" width="640" height="390"
+  src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&origin=http://example.com"
+  frameborder="0"></iframe>
+Note that if you do write the <iframe> tag, then when you construct the YT.Player object, you do not need to specify values for the width and height, which are specified as attributes of the <iframe> tag, or the videoId and player parameters, which are are specified in the src URL. As an extra security measure, you should also include the origin parameter to the URL, specifying the URL scheme (http:// or https://) and full domain of your host page as the parameter value. While origin is optional, including it protects against malicious third-party JavaScript being injected into your page and hijacking control of your YouTube player.
+
+For other examples on constructing video player objects, see Examples.
+
+Operations
+To call the player API methods, you must first get a reference to the player object you wish to control. You obtain the reference by creating a YT.Player object as discussed in the Getting started and Loading a video player sections of this document.
+
+Functions
+Queueing functions
+Queueing functions allow you to load and play a video, a playlist, or another list of videos. If you are using the object syntax described below to call these functions, then you can also queue or load a list of a user's uploaded videos.
+
+The API supports two different syntaxes for calling the queueing functions.
+
+The argument syntax requires function arguments to be listed in a prescribed order.
+
+The object syntax lets you pass an object as a single parameter and to define object properties for the function arguments that you wish to set. In addition, the API may support additional functionality that the argument syntax does not support.
+
+For example, the loadVideoById function can be called in either of the following ways. Note that the object syntax supports the endSeconds property, which the argument syntax does not support.
+
+Argument syntax
+
+
+loadVideoById("bHQqvYy5KYo", 5, "large")
+Object syntax
+
+
+loadVideoById({'videoId': 'bHQqvYy5KYo',
+               'startSeconds': 5,
+               'endSeconds': 60});
+Queueing functions for videos
+cueVideoById
+Argument syntax
+
+
+player.cueVideoById(videoId:String,
+                    startSeconds:Number):Void
+Object syntax
+
+
+player.cueVideoById({videoId:String,
+                     startSeconds:Number,
+                     endSeconds:Number}):Void
+This function loads the specified video's thumbnail and prepares the player to play the video. The player does not request the FLV until playVideo() or seekTo() is called.
+
+The required videoId parameter specifies the YouTube Video ID of the video to be played. In the YouTube Data API, a video resource's id property specifies the ID.
+The optional startSeconds parameter accepts a float/integer and specifies the time from which the video should start playing when playVideo() is called. If you specify a startSeconds value and then call seekTo(), then the player plays from the time specified in the seekTo() call. When the video is cued and ready to play, the player will broadcast a video cued event (5).
+The optional endSeconds parameter, which is only supported in object syntax, accepts a float/integer and specifies the time when the video should stop playing when playVideo() is called. If you specify an endSeconds value and then call seekTo(), the endSeconds value will no longer be in effect.
+loadVideoById
+
+Argument syntax
+
+
+player.loadVideoById(videoId:String,
+                     startSeconds:Number):Void
+Object syntax
+
+
+player.loadVideoById({videoId:String,
+                      startSeconds:Number,
+                      endSeconds:Number}):Void
+This function loads and plays the specified video.
+
+The required videoId parameter specifies the YouTube Video ID of the video to be played. In the YouTube Data API, a video resource's id property specifies the ID.
+The optional startSeconds parameter accepts a float/integer. If it is specified, then the video will start from the closest keyframe to the specified time.
+The optional endSeconds parameter accepts a float/integer. If it is specified, then the video will stop playing at the specified time.
+cueVideoByUrl
+
+Argument syntax
+
+
+player.cueVideoByUrl(mediaContentUrl:String,
+                     startSeconds:Number):Void
+Object syntax
+
+
+player.cueVideoByUrl({mediaContentUrl:String,
+                      startSeconds:Number,
+                      endSeconds:Number}):Void
+This function loads the specified video's thumbnail and prepares the player to play the video. The player does not request the FLV until playVideo() or seekTo() is called.
+
+The required mediaContentUrl parameter specifies a fully qualified YouTube player URL in the format http://www.youtube.com/v/VIDEO_ID?version=3.
+The optional startSeconds parameter accepts a float/integer and specifies the time from which the video should start playing when playVideo() is called. If you specify startSeconds and then call seekTo(), then the player plays from the time specified in the seekTo() call. When the video is cued and ready to play, the player will broadcast a video cued event (5).
+The optional endSeconds parameter, which is only supported in object syntax, accepts a float/integer and specifies the time when the video should stop playing when playVideo() is called. If you specify an endSeconds value and then call seekTo(), the endSeconds value will no longer be in effect.
+loadVideoByUrl
+
+Argument syntax
+
+
+player.loadVideoByUrl(mediaContentUrl:String,
+                      startSeconds:Number):Void
+Object syntax
+
+
+player.loadVideoByUrl({mediaContentUrl:String,
+                       startSeconds:Number,
+                       endSeconds:Number}):Void
+This function loads and plays the specified video.
+
+The required mediaContentUrl parameter specifies a fully qualified YouTube player URL in the format http://www.youtube.com/v/VIDEO_ID?version=3.
+The optional startSeconds parameter accepts a float/integer and specifies the time from which the video should start playing. If startSeconds (number can be a float) is specified, the video will start from the closest keyframe to the specified time.
+The optional endSeconds parameter, which is only supported in object syntax, accepts a float/integer and specifies the time when the video should stop playing.
+Queueing functions for lists
+The cuePlaylist and loadPlaylist functions allow you to load and play a playlist. If you are using object syntax to call these functions, you can also queue (or load) a list of a user's uploaded videos.
+
+Since the functions work differently depending on whether they are called using the argument syntax or the object syntax, both calling methods are documented below.
+
+cuePlaylist
+Argument syntax
+
+
+player.cuePlaylist(playlist:String|Array,
+                   index:Number,
+                   startSeconds:Number):Void
+Queues the specified playlist. When the playlist is cued and ready to play, the player will broadcast a video cued event (5).
+The required playlist parameter specifies an array of YouTube video IDs. In the YouTube Data API, the video resource's id property identifies that video's ID.
+
+The optional index parameter specifies the index of the first video in the playlist that will play. The parameter uses a zero-based index, and the default parameter value is 0, so the default behavior is to load and play the first video in the playlist.
+
+The optional startSeconds parameter accepts a float/integer and specifies the time from which the first video in the playlist should start playing when the playVideo() function is called. If you specify a startSeconds value and then call seekTo(), then the player plays from the time specified in the seekTo() call. If you cue a playlist and then call the playVideoAt() function, the player will start playing at the beginning of the specified video.
+
+Object syntax
+
+
+player.cuePlaylist({listType:String,
+                    list:String,
+                    index:Number,
+                    startSeconds:Number}):Void
+Queues the specified list of videos. The list can be a playlist or a user's uploaded videos feed. The ability to queue a list of search results is deprecated and will no longer be supported as of 15 November 2020.
+When the list is cued and ready to play, the player will broadcast a video cued event (5).
+
+The optional listType property specifies the type of results feed that you are retrieving. Valid values are playlist and user_uploads. A deprecated value, search, will no longer be supported as of 15 November 2020. The default value is playlist.
+
+The required list property contains a key that identifies the particular list of videos that YouTube should return.
+
+If the listType property value is playlist, then the list property specifies the playlist ID or an array of video IDs. In the YouTube Data API, the playlist resource's id property identifies a playlist's ID, and the video resource's id property specifies a video ID.
+If the listType property value is user_uploads, then the list property identifies the user whose uploaded videos will be returned.
+If the listType property value is search, then the list property specifies the search query. Note: This functionality is deprecated and will no longer be supported as of 15 November 2020.
+The optional index property specifies the index of the first video in the list that will play. The parameter uses a zero-based index, and the default parameter value is 0, so the default behavior is to load and play the first video in the list.
+
+The optional startSeconds property accepts a float/integer and specifies the time from which the first video in the list should start playing when the playVideo() function is called. If you specify a startSeconds value and then call seekTo(), then the player plays from the time specified in the seekTo() call. If you cue a list and then call the playVideoAt() function, the player will start playing at the beginning of the specified video.
+
+loadPlaylist
+Argument syntax
+
+
+player.loadPlaylist(playlist:String|Array,
+                    index:Number,
+                    startSeconds:Number):Void
+This function loads the specified playlist and plays it.
+The required playlist parameter specifies an array of YouTube video IDs. In the YouTube Data API, the video resource's id property specifies a video ID.
+
+The optional index parameter specifies the index of the first video in the playlist that will play. The parameter uses a zero-based index, and the default parameter value is 0, so the default behavior is to load and play the first video in the playlist.
+
+The optional startSeconds parameter accepts a float/integer and specifies the time from which the first video in the playlist should start playing.
+
+Object syntax
+
+
+player.loadPlaylist({list:String,
+                     listType:String,
+                     index:Number,
+                     startSeconds:Number}):Void
+This function loads the specified list and plays it. The list can be a playlist or a user's uploaded videos feed. The ability to load a list of search results is deprecated and will no longer be supported as of 15 November 2020.
+The optional listType property specifies the type of results feed that you are retrieving. Valid values are playlist and user_uploads. A deprecated value, search, will no longer be supported as of 15 November 2020. The default value is playlist.
+
+The required list property contains a key that identifies the particular list of videos that YouTube should return.
+
+If the listType property value is playlist, then the list property specifies a playlist ID or an array of video IDs. In the YouTube Data API, the playlist resource's id property specifies a playlist's ID, and the video resource's id property specifies a video ID.
+If the listType property value is user_uploads, then the list property identifies the user whose uploaded videos will be returned.
+If the listType property value is search, then the list property specifies the search query. Note: This functionality is deprecated and will no longer be supported as of 15 November 2020.
+The optional index property specifies the index of the first video in the list that will play. The parameter uses a zero-based index, and the default parameter value is 0, so the default behavior is to load and play the first video in the list.
+
+The optional startSeconds property accepts a float/integer and specifies the time from which the first video in the list should start playing.
+
+Playback controls and player settings
+Playing a video
+player.playVideo():Void
+Plays the currently cued/loaded video. The final player state after this function executes will be playing (1).
+
+Note: A playback only counts toward a video's official view count if it is initiated via a native play button in the player.
+player.pauseVideo():Void
+Pauses the currently playing video. The final player state after this function executes will be paused (2) unless the player is in the ended (0) state when the function is called, in which case the player state will not change.
+player.stopVideo():Void
+Stops and cancels loading of the current video. This function should be reserved for rare situations when you know that the user will not be watching additional video in the player. If your intent is to pause the video, you should just call the pauseVideo function. If you want to change the video that the player is playing, you can call one of the queueing functions without calling stopVideo first.
+
+Important: Unlike the pauseVideo function, which leaves the player in the paused (2) state, the stopVideo function could put the player into any not-playing state, including ended (0), paused (2), video cued (5) or unstarted (-1).
+player.seekTo(seconds:Number, allowSeekAhead:Boolean):Void
+Seeks to a specified time in the video. If the player is paused when the function is called, it will remain paused. If the function is called from another state (playing, video cued, etc.), the player will play the video.
+The seconds parameter identifies the time to which the player should advance.
+
+The player will advance to the closest keyframe before that time unless the player has already downloaded the portion of the video to which the user is seeking.
+
+The allowSeekAhead parameter determines whether the player will make a new request to the server if the seconds parameter specifies a time outside of the currently buffered video data.
+
+We recommend that you set this parameter to false while the user drags the mouse along a video progress bar and then set it to true when the user releases the mouse. This approach lets a user scroll to different points of a video without requesting new video streams by scrolling past unbuffered points in the video. When the user releases the mouse button, the player advances to the desired point in the video and requests a new video stream if necessary.
+
+Controlling playback of 360° videos
+Note: The 360° video playback experience has limited support on mobile devices. On unsupported devices, 360° videos appear distorted and there is no supported way to change the viewing perspective at all, including through the API, using orientation sensors, or responding to touch/drag actions on the device's screen.
+
+player.getSphericalProperties():Object
+Retrieves properties that describe the viewer's current perspective, or view, for a video playback. In addition:
+This object is only populated for 360° videos, which are also called spherical videos.
+If the current video is not a 360° video or if the function is called from a non-supported device, then the function returns an empty object.
+On supported mobile devices, if the enableOrientationSensor property is set to true, then this function returns an object in which the fov property contains the correct value and the other properties are set to 0.
+The object contains the following properties:
+Properties
+yaw	A number in the range [0, 360) that represents the horizontal angle of the view in degrees, which reflects the extent to which the user turns the view to face further left or right. The neutral position, facing the center of the video in its equirectangular projection, represents 0°, and this value increases as the viewer turns left.
+pitch	A number in the range [-90, 90] that represents the vertical angle of the view in degrees, which reflects the extent to which the user adjusts the view to look up or down. The neutral position, facing the center of the video in its equirectangular projection, represents 0°, and this value increases as the viewer looks up.
+roll	A number in the range [-180, 180] that represents the clockwise or counterclockwise rotational angle of the view in degrees. The neutral position, with the horizontal axis in the equirectangular projection being parallel to the horizontal axis of the view, represents 0°. The value increases as the view rotates clockwise and decreases as the view rotates counterclockwise.
+
+Note that the embedded player does not present a user interface for adjusting the roll of the view. The roll can be adjusted in either of these mutually exclusive ways:
+Use the orientation sensor in a mobile browser to provide roll for the view. If the orientation sensor is enabled, then the getSphericalProperties function always returns 0 as the value of the roll property.
+If the orientation sensor is disabled, set the roll to a nonzero value using this API.
+fov	A number in the range [30, 120] that represents the field-of-view of the view in degrees as measured along the longer edge of the viewport. The shorter edge is automatically adjusted to be proportional to the aspect ratio of the view.
+
+The default value is 100 degrees. Decreasing the value is like zooming in on the video content, and increasing the value is like zooming out. This value can be adjusted either by using the API or by using the mousewheel when the video is in fullscreen mode.
+player.setSphericalProperties(properties:Object):Void
+Sets the video orientation for playback of a 360° video. (If the current video is not spherical, the method is a no-op regardless of the input.)
+
+The player view responds to calls to this method by updating to reflect the values of any known properties in the properties object. The view persists values for any other known properties not included in that object.
+
+In addition:
+If the object contains unknown and/or unexpected properties, the player ignores them.
+As noted at the beginning of this section, the 360° video playback experience is not supported on all mobile devices.
+By default, on supported mobile devices, this function sets only sets the fov property and does not affect the yaw, pitch, and roll properties for 360° video playbacks. See the enableOrientationSensor property below for more detail.
+The properties object passed to the function contains the following properties:
+Properties
+yaw	See definition above.
+pitch	See definition above.
+roll	See definition above.
+fov	See definition above.
+enableOrientationSensor	
+Note: This property affects the 360° viewing experience on supported devices only.
+A boolean value that indicates whether the IFrame embed should respond to events that signal changes in a supported device's orientation, such as a mobile browser's DeviceOrientationEvent. The default parameter value is true.
+
+Supported mobile devices
+When the value is true, an embedded player relies only on the device's movement to adjust the yaw, pitch, and roll properties for 360° video playbacks. However, the fov property can still be changed via the API, and the API is, in fact, the only way to change the fov property on a mobile device. This is the default behavior.
+When the value is false, then the device's movement does not affect the 360° viewing experience, and the yaw, pitch, roll, and fov properties must all be set via the API.
+
+Unsupported mobile devices
+The enableOrientationSensor property value does not have any effect on the playback experience.
+Playing a video in a playlist
+player.nextVideo():Void
+This function loads and plays the next video in the playlist.
+If player.nextVideo() is called while the last video in the playlist is being watched, and the playlist is set to play continuously (loop), then the player will load and play the first video in the list.
+
+If player.nextVideo() is called while the last video in the playlist is being watched, and the playlist is not set to play continuously, then playback will end.
+
+player.previousVideo():Void
+This function loads and plays the previous video in the playlist.
+If player.previousVideo() is called while the first video in the playlist is being watched, and the playlist is set to play continuously (loop), then the player will load and play the last video in the list.
+
+If player.previousVideo() is called while the first video in the playlist is being watched, and the playlist is not set to play continuously, then the player will restart the first playlist video from the beginning.
+
+player.playVideoAt(index:Number):Void
+This function loads and plays the specified video in the playlist.
+The required index parameter specifies the index of the video that you want to play in the playlist. The parameter uses a zero-based index, so a value of 0 identifies the first video in the list. If you have shuffled the playlist, this function will play the video at the specified position in the shuffled playlist.
+
+Changing the player volume
+player.mute():Void
+Mutes the player.
+player.unMute():Void
+Unmutes the player.
+player.isMuted():Boolean
+Returns true if the player is muted, false if not.
+player.setVolume(volume:Number):Void
+Sets the volume. Accepts an integer between 0 and 100.
+player.getVolume():Number
+Returns the player's current volume, an integer between 0 and 100. Note that getVolume() will return the volume even if the player is muted.
+Setting the player size
+player.setSize(width:Number, height:Number):Object
+Sets the size in pixels of the <iframe> that contains the player.
+Setting the playback rate
+player.getPlaybackRate():Number
+This function retrieves the playback rate of the currently playing video. The default playback rate is 1, which indicates that the video is playing at normal speed. Playback rates may include values like 0.25, 0.5, 1, 1.5, and 2.
+player.setPlaybackRate(suggestedRate:Number):Void
+This function sets the suggested playback rate for the current video. If the playback rate changes, it will only change for the video that is already cued or being played. If you set the playback rate for a cued video, that rate will still be in effect when the playVideo function is called or the user initiates playback directly through the player controls. In addition, calling functions to cue or load videos or playlists (cueVideoById, loadVideoById, etc.) will reset the playback rate to 1.
+
+Calling this function does not guarantee that the playback rate will actually change. However, if the playback rate does change, the onPlaybackRateChange event will fire, and your code should respond to the event rather than the fact that it called the setPlaybackRate function.
+
+The getAvailablePlaybackRates method will return the possible playback rates for the currently playing video. However, if you set the suggestedRate parameter to a non-supported integer or float value, the player will round that value down to the nearest supported value in the direction of 1.
+player.getAvailablePlaybackRates():Array
+This function returns the set of playback rates in which the current video is available. The default value is 1, which indicates that the video is playing in normal speed.
+
+The function returns an array of numbers ordered from slowest to fastest playback speed. Even if the player does not support variable playback speeds, the array should always contain at least one value (1).
+Setting playback behavior for playlists
+player.setLoop(loopPlaylists:Boolean):Void
+This function indicates whether the video player should continuously play a playlist or if it should stop playing after the last video in the playlist ends. The default behavior is that playlists do not loop.
+
+This setting will persist even if you load or cue a different playlist, which means that if you load a playlist, call the setLoop function with a value of true, and then load a second playlist, the second playlist will also loop.
+
+The required loopPlaylists parameter identifies the looping behavior.
+
+If the parameter value is true, then the video player will continuously play playlists. After playing the last video in a playlist, the video player will go back to the beginning of the playlist and play it again.
+
+If the parameter value is false, then playbacks will end after the video player plays the last video in a playlist.
+
+player.setShuffle(shufflePlaylist:Boolean):Void
+This function indicates whether a playlist's videos should be shuffled so that they play back in an order different from the one that the playlist creator designated. If you shuffle a playlist after it has already started playing, the list will be reordered while the video that is playing continues to play. The next video that plays will then be selected based on the reordered list.
+
+This setting will not persist if you load or cue a different playlist, which means that if you load a playlist, call the setShuffle function, and then load a second playlist, the second playlist will not be shuffled.
+
+The required shufflePlaylist parameter indicates whether YouTube should shuffle the playlist.
+
+If the parameter value is true, then YouTube will shuffle the playlist order. If you instruct the function to shuffle a playlist that has already been shuffled, YouTube will shuffle the order again.
+
+If the parameter value is false, then YouTube will change the playlist order back to its original order.
+
+Playback status
+player.getVideoLoadedFraction():Float
+Returns a number between 0 and 1 that specifies the percentage of the video that the player shows as buffered. This method returns a more reliable number than the now-deprecated getVideoBytesLoaded and getVideoBytesTotal methods.
+player.getPlayerState():Number
+Returns the state of the player. Possible values are:
+-1 – unstarted
+0 – ended
+1 – playing
+2 – paused
+3 – buffering
+5 – video cued
+player.getCurrentTime():Number
+Returns the elapsed time in seconds since the video started playing.
+player.getVideoStartBytes():Number
+Deprecated as of October 31, 2012. Returns the number of bytes the video file started loading from. (This method now always returns a value of 0.) Example scenario: the user seeks ahead to a point that hasn't loaded yet, and the player makes a new request to play a segment of the video that hasn't loaded yet.
+player.getVideoBytesLoaded():Number
+Deprecated as of July 18, 2012. Instead, use the getVideoLoadedFraction method to determine the percentage of the video that has buffered.
+
+This method returns a value between 0 and 1000 that approximates the amount of the video that has been loaded. You could calculate the fraction of the video that has been loaded by dividing the getVideoBytesLoaded value by the getVideoBytesTotal value.
+player.getVideoBytesTotal():Number
+Deprecated as of July 18, 2012. Instead, use the getVideoLoadedFraction method to determine the percentage of the video that has buffered.
+
+Returns the size in bytes of the currently loaded/playing video or an approximation of the video's size.
+
+This method always returns a value of 1000. You could calculate the fraction of the video that has been loaded by dividing the getVideoBytesLoaded value by the getVideoBytesTotal value.
+Retrieving video information
+player.getDuration():Number
+Returns the duration in seconds of the currently playing video. Note that getDuration() will return 0 until the video's metadata is loaded, which normally happens just after the video starts playing.
+
+If the currently playing video is a live event, the getDuration() function will return the elapsed time since the live video stream began. Specifically, this is the amount of time that the video has streamed without being reset or interrupted. In addition, this duration is commonly longer than the actual event time since streaming may begin before the event's start time.
+player.getVideoUrl():String
+Returns the YouTube.com URL for the currently loaded/playing video.
+player.getVideoEmbedCode():String
+Returns the embed code for the currently loaded/playing video.
+Retrieving playlist information
+player.getPlaylist():Array
+This function returns an array of the video IDs in the playlist as they are currently ordered. By default, this function will return video IDs in the order designated by the playlist owner. However, if you have called the setShuffle function to shuffle the playlist order, then the getPlaylist() function's return value will reflect the shuffled order.
+player.getPlaylistIndex():Number
+This function returns the index of the playlist video that is currently playing.
+If you have not shuffled the playlist, the return value will identify the position where the playlist creator placed the video. The return value uses a zero-based index, so a value of 0 identifies the first video in the playlist.
+
+If you have shuffled the playlist, the return value will identify the video's order within the shuffled playlist.
+
+Adding or removing an event listener
+player.addEventListener(event:String, listener:String):Void
+Adds a listener function for the specified event. The Events section below identifies the different events that the player might fire. The listener is a string that specifies the function that will execute when the specified event fires.
+player.removeEventListener(event:String, listener:String):Void
+Removes a listener function for the specified event. The listener is a string that identifies the function that will no longer execute when the specified event fires.
+Accessing and modifying DOM nodes
+player.getIframe():Object
+This method returns the DOM node for the embedded <iframe>.
+player.destroy():Void
+Removes the <iframe> containing the player.  ytmusic-api
+TypeScript icon, indicating that this package has built-in type declarations
+5.3.0 • Public • Published 7 months ago
+YTMusic API
+License Languages Top Language Commit Activity Last commit
+
+YouTube Music API (Unofficial) is a YouTube Music data scraper. It comes with TypeScript support API for return types. The NPM package can be found here
+
+Motivation
+I used to use youtube-music-api as my youtube music api data scraper. I liked looking into the source code of how it works but it never made sense to me. I also didn't like that there were no TypeScript annotations for the return types of methods. Because of this, I decided to build my own version of a youtube music api with TypeScript annotations, testing and written in a way I can understand.
+
+Features
+TypeScript Support for data return types
+Data from YouTube can be inconsistent but YTMusic API has been tested and the data matches the TypeScript types 95% of the time
+Scrape information directly from YouTube Music API
+Search Suggestions
+Songs
+Videos
+Artists
+Albums
+Playlists
+Lyrics
+Usage
+import YTMusic from "ytmusic-api"
+
+const ytmusic = new YTMusic()
+await ytmusic.initialize(/* Optional: Custom cookies */)
+
+ytmusic.search("Never gonna give you up").then(songs => {
+	console.log(songs)
+}) ytmusicapi: Unofficial API for YouTube Music
+The purpose of this library is to automate interactions with YouTube Music, such as retrieving your library content, managing playlists and uploading songs. To achieve this, it emulates web requests that would occur if you performed the same actions in your web browser.
+
+This project is not supported nor endorsed by Google
+
+Features
+Browsing:
+search (including all filters) and suggestions
+
+get artist information and releases (songs, videos, albums, singles, related artists)
+
+get user information (videos, playlists)
+
+get albums
+
+get song metadata
+
+get watch playlists (next songs when you press play/radio/shuffle in YouTube Music)
+
+get song lyrics
+
+Exploring music:
+get moods and genres playlists
+
+get latest charts (globally and per country)
+
+Library management:
+get library contents: playlists, songs, artists, albums and subscriptions, podcasts, channels
+
+add/remove library content: rate songs, albums and playlists, subscribe/unsubscribe artists
+
+get and modify play history
+
+Playlists:
+create and delete playlists
+
+modify playlists: edit metadata, add/move/remove tracks
+
+get playlist contents
+
+get playlist suggestions
+
+Podcasts:
+get podcasts
+
+get episodes
+
+get channels
+
+get episodes playlists
+
+Uploads:
+upload songs and remove them again
+
+list uploaded songs, artists and albums
+
+Localization:
+all regions are supported (see locations FAQ
+
+16 languages are supported (see languages FAQ
+
+If you find something missing or broken, check the FAQ or feel free to create an issue.
+
+Requirements
+Python 3.10 or higher - https://www.python.org
+
+Setup
+See the Documentation for detailed instructions
+
+Usage
+from ytmusicapi import YTMusic
+
+yt = YTMusic('oauth.json')
+playlistId = yt.create_playlist('test', 'test description')
+search_results = yt.search('Oasis Wonderwall')
+yt.add_playlist_items(playlistId, [search_results[0]['videoId']])
+The tests are also a great source of usage examples.
+
+To get started, read the setup instructions.
+
+For a complete documentation of available functions, see the Reference.
+
+Contents
+Setup
+OAuth authentication
+Browser authentication
+Copy authentication headers
+Using the headers in your project
+Manual file creation
+Usage
+Unauthenticated
+Authenticated
+Brand accounts
+Reference
+YTMusic
+YTMusic
+YTMusic.__init__()
+Setup
+setup()
+setup_oauth()
+Search
+YTMusic.search()
+YTMusic.get_search_suggestions()
+YTMusic.remove_search_suggestions()
+Browsing
+YTMusic.get_home()
+YTMusic.get_artist()
+YTMusic.get_artist_albums()
+YTMusic.get_album()
+YTMusic.get_album_browse_id()
+YTMusic.get_user()
+YTMusic.get_user_playlists()
+YTMusic.get_user_videos()
+YTMusic.get_song()
+YTMusic.get_song_related()
+YTMusic.get_lyrics()
+YTMusic.get_tasteprofile()
+YTMusic.set_tasteprofile()
+Explore
+YTMusic.get_mood_categories()
+YTMusic.get_mood_playlists()
+YTMusic.get_charts()
+Watch
+YTMusic.get_watch_playlist()
+Library
+YTMusic.get_library_playlists()
+YTMusic.get_library_songs()
+YTMusic.get_library_albums()
+YTMusic.get_library_artists()
+YTMusic.get_library_subscriptions()
+YTMusic.get_library_podcasts()
+YTMusic.get_library_channels()
+YTMusic.get_liked_songs()
+YTMusic.get_saved_episodes()
+YTMusic.get_history()
+YTMusic.add_history_item()
+YTMusic.remove_history_items()
+YTMusic.rate_song()
+YTMusic.edit_song_library_status()
+YTMusic.rate_playlist()
+YTMusic.subscribe_artists()
+YTMusic.unsubscribe_artists()
+YTMusic.get_account_info()
+Playlists
+YTMusic.get_playlist()
+YTMusic.create_playlist()
+YTMusic.edit_playlist()
+YTMusic.delete_playlist()
+YTMusic.add_playlist_items()
+YTMusic.remove_playlist_items()
+Podcasts
+YTMusic.get_channel()
+YTMusic.get_channel_episodes()
+YTMusic.get_podcast()
+YTMusic.get_episode()
+YTMusic.get_episodes_playlist()
+Uploads
+YTMusic.get_library_upload_songs()
+YTMusic.get_library_upload_artists()
+YTMusic.get_library_upload_albums()
+YTMusic.get_library_upload_artist()
+YTMusic.get_library_upload_album()
+YTMusic.upload_song()
+YTMusic.delete_upload_entity()
+ytmusicapi
+ytmusicapi package
+Subpackages
+ytmusicapi.auth package
+Subpackages
+ytmusicapi.auth.oauth package
+Submodules
+ytmusicapi.auth.oauth.credentials module
+Credentials
+Credentials.client_id
+Credentials.client_secret
+Credentials.get_code()
+Credentials.refresh_token()
+Credentials.token_from_code()
+OAuthCredentials
+OAuthCredentials.client_id
+OAuthCredentials.client_secret
+OAuthCredentials.get_code()
+OAuthCredentials.refresh_token()
+OAuthCredentials.token_from_code()
+ytmusicapi.auth.oauth.exceptions module
+BadOAuthClient
+UnauthorizedOAuthClient
+ytmusicapi.auth.oauth.models module
+AuthCodeDict
+AuthCodeDict.device_code
+AuthCodeDict.expires_in
+AuthCodeDict.interval
+AuthCodeDict.user_code
+AuthCodeDict.verification_url
+BaseTokenDict
+BaseTokenDict.access_token
+BaseTokenDict.expires_in
+BaseTokenDict.scope
+BaseTokenDict.token_type
+RefreshableTokenDict
+RefreshableTokenDict.access_token
+RefreshableTokenDict.expires_at
+RefreshableTokenDict.expires_in
+RefreshableTokenDict.refresh_token
+RefreshableTokenDict.scope
+RefreshableTokenDict.token_type
+ytmusicapi.auth.oauth.token module
+OAuthToken
+OAuthToken.from_json()
+OAuthToken.is_expiring
+OAuthToken.is_oauth()
+OAuthToken.update()
+RefreshingToken
+RefreshingToken.credentials
+RefreshingToken.local_cache
+RefreshingToken.prompt_for_token()
+RefreshingToken.store_token()
+Token
+Token.access_token
+Token.as_auth()
+Token.as_dict()
+Token.as_json()
+Token.expires_at
+Token.expires_in
+Token.is_expiring
+Token.members()
+Token.refresh_token
+Token.scope
+Token.token_type
+Module contents
+OAuthCredentials
+OAuthCredentials.client_id
+OAuthCredentials.client_secret
+OAuthCredentials.get_code()
+OAuthCredentials.refresh_token()
+OAuthCredentials.token_from_code()
+OAuthToken
+OAuthToken.from_json()
+OAuthToken.is_expiring
+OAuthToken.is_oauth()
+OAuthToken.update()
+RefreshingToken
+RefreshingToken.access_token
+RefreshingToken.credentials
+RefreshingToken.local_cache
+RefreshingToken.prompt_for_token()
+RefreshingToken.refresh_token
+RefreshingToken.scope
+RefreshingToken.store_token()
+RefreshingToken.token_type
+Submodules
+ytmusicapi.auth.auth_parse module
+determine_auth_type()
+parse_auth_str()
+ytmusicapi.auth.browser module
+is_browser()
+setup_browser()
+ytmusicapi.auth.types module
+AuthType
+AuthType.BROWSER
+AuthType.OAUTH_CUSTOM_CLIENT
+AuthType.OAUTH_CUSTOM_FULL
+AuthType.UNAUTHORIZED
+Module contents
+ytmusicapi.mixins package
+Submodules
+ytmusicapi.mixins.browsing module
+BrowsingMixin
+BrowsingMixin.ArtistOrderType
+BrowsingMixin.get_album()
+BrowsingMixin.get_album_browse_id()
+BrowsingMixin.get_artist()
+BrowsingMixin.get_artist_albums()
+BrowsingMixin.get_basejs_url()
+BrowsingMixin.get_home()
+BrowsingMixin.get_lyrics()
+BrowsingMixin.get_signatureTimestamp()
+BrowsingMixin.get_song()
+BrowsingMixin.get_song_related()
+BrowsingMixin.get_tasteprofile()
+BrowsingMixin.get_user()
+BrowsingMixin.get_user_playlists()
+BrowsingMixin.get_user_videos()
+BrowsingMixin.set_tasteprofile()
+ytmusicapi.mixins.charts module
+ChartsMixin
+ChartsMixin.get_charts()
+ytmusicapi.mixins.explore module
+ExploreMixin
+ExploreMixin.get_explore()
+ExploreMixin.get_mood_categories()
+ExploreMixin.get_mood_playlists()
+ytmusicapi.mixins.library module
+LibraryMixin
+LibraryMixin.add_history_item()
+LibraryMixin.edit_song_library_status()
+LibraryMixin.get_account_info()
+LibraryMixin.get_history()
+LibraryMixin.get_library_albums()
+LibraryMixin.get_library_artists()
+LibraryMixin.get_library_channels()
+LibraryMixin.get_library_playlists()
+LibraryMixin.get_library_podcasts()
+LibraryMixin.get_library_songs()
+LibraryMixin.get_library_subscriptions()
+LibraryMixin.rate_playlist()
+LibraryMixin.rate_song()
+LibraryMixin.remove_history_items()
+LibraryMixin.subscribe_artists()
+LibraryMixin.unsubscribe_artists()
+ytmusicapi.mixins.playlists module
+PlaylistsMixin
+PlaylistsMixin.add_playlist_items()
+PlaylistsMixin.create_playlist()
+PlaylistsMixin.delete_playlist()
+PlaylistsMixin.edit_playlist()
+PlaylistsMixin.get_liked_songs()
+PlaylistsMixin.get_playlist()
+PlaylistsMixin.get_saved_episodes()
+PlaylistsMixin.remove_playlist_items()
+ytmusicapi.mixins.podcasts module
+PodcastsMixin
+PodcastsMixin.get_channel()
+PodcastsMixin.get_channel_episodes()
+PodcastsMixin.get_episode()
+PodcastsMixin.get_episodes_playlist()
+PodcastsMixin.get_podcast()
+ytmusicapi.mixins.search module
+SearchMixin
+SearchMixin.get_search_suggestions()
+SearchMixin.remove_search_suggestions()
+SearchMixin.search()
+ytmusicapi.mixins.uploads module
+UploadsMixin
+UploadsMixin.delete_upload_entity()
+UploadsMixin.get_library_upload_album()
+UploadsMixin.get_library_upload_albums()
+UploadsMixin.get_library_upload_artist()
+UploadsMixin.get_library_upload_artists()
+UploadsMixin.get_library_upload_songs()
+UploadsMixin.upload_song()
+ytmusicapi.mixins.watch module
+WatchMixin
+WatchMixin.get_watch_playlist()
+Module contents
+ytmusicapi.models package
+Subpackages
+ytmusicapi.models.content package
+Submodules
+ytmusicapi.models.content.enums module
+LikeStatus
+LikeStatus.DISLIKE
+LikeStatus.INDIFFERENT
+LikeStatus.LIKE
+PrivacyStatus
+PrivacyStatus.PRIVATE
+PrivacyStatus.PUBLIC
+PrivacyStatus.UNLISTED
+VideoType
+VideoType.ATV
+VideoType.OFFICIAL_SOURCE_MUSIC
+VideoType.OMV
+VideoType.UGC
+Module contents
+Submodules
+ytmusicapi.models.lyrics module
+LyricLine
+LyricLine.end_time
+LyricLine.from_raw()
+LyricLine.id
+LyricLine.start_time
+LyricLine.text
+Lyrics
+Lyrics.hasTimestamps
+Lyrics.lyrics
+Lyrics.source
+TimedLyrics
+TimedLyrics.hasTimestamps
+TimedLyrics.lyrics
+TimedLyrics.source
+Module contents
+LyricLine
+LyricLine.end_time
+LyricLine.from_raw()
+LyricLine.id
+LyricLine.start_time
+LyricLine.text
+Lyrics
+Lyrics.hasTimestamps
+Lyrics.lyrics
+Lyrics.source
+TimedLyrics
+TimedLyrics.hasTimestamps
+TimedLyrics.lyrics
+TimedLyrics.source
+ytmusicapi.parsers package
+Submodules
+ytmusicapi.parsers.albums module
+parse_album_header()
+parse_album_header_2024()
+parse_album_playlistid_if_exists()
+ytmusicapi.parsers.browsing module
+parse_album()
+parse_content_list()
+parse_mixed_content()
+parse_playlist()
+parse_related_artist()
+parse_single()
+parse_song()
+parse_song_flat()
+parse_video()
+parse_watch_playlist()
+ytmusicapi.parsers.constants module
+ytmusicapi.parsers.explore module
+parse_chart_artist()
+parse_chart_episode()
+parse_chart_playlist()
+parse_chart_song()
+parse_ranking()
+ytmusicapi.parsers.i18n module
+Parser
+Parser.get_api_result_types()
+Parser.get_search_result_types()
+Parser.parse_channel_contents()
+ytmusicapi.parsers.library module
+get_library_contents()
+parse_albums()
+parse_artists()
+parse_library_albums()
+parse_library_artists()
+parse_library_podcasts()
+parse_library_songs()
+pop_songs_random_mix()
+ytmusicapi.parsers.playlists module
+parse_audio_playlist()
+parse_playlist_header()
+parse_playlist_header_meta()
+parse_playlist_item()
+parse_playlist_items()
+validate_playlist_id()
+ytmusicapi.parsers.podcasts module
+Description
+Description.from_runs()
+Description.text
+DescriptionElement
+DescriptionElement.text
+Link
+Link.url
+Timestamp
+Timestamp.seconds
+parse_base_header()
+parse_episode()
+parse_episode_header()
+parse_podcast()
+parse_podcast_header()
+ytmusicapi.parsers.search module
+get_search_params()
+get_search_result_type()
+parse_search_result()
+parse_search_results()
+parse_search_suggestions()
+parse_top_result()
+ytmusicapi.parsers.songs module
+parse_like_status()
+parse_song_album()
+parse_song_artists()
+parse_song_artists_runs()
+parse_song_library_status()
+parse_song_menu_tokens()
+parse_song_run()
+parse_song_runs()
+ytmusicapi.parsers.uploads module
+parse_uploaded_items()
+ytmusicapi.parsers.watch module
+get_tab_browse_id()
+parse_watch_playlist()
+parse_watch_track()
+Module contents
+Submodules
+ytmusicapi.constants module
+ytmusicapi.continuations module
+get_continuation_contents()
+get_continuation_params()
+get_continuation_string()
+get_continuation_token()
+get_continuations()
+get_continuations_2025()
+get_parsed_continuation_items()
+get_reloadable_continuation_params()
+get_reloadable_continuations()
+get_validated_continuations()
+resend_request_until_parsed_response_is_valid()
+validate_response()
+ytmusicapi.enums module
+ResponseStatus
+ResponseStatus.SUCCEEDED
+ytmusicapi.exceptions module
+YTMusicError
+YTMusicServerError
+YTMusicUserError
+ytmusicapi.helpers module
+get_authorization()
+get_visitor_id()
+initialize_context()
+initialize_headers()
+sapisid_from_cookie()
+sum_total_duration()
+to_int()
+ytmusicapi.navigation module
+find_object_by_key()
+find_objects_by_key()
+nav()
+ytmusicapi.setup module
+main()
+parse_args()
+setup()
+setup_oauth()
+ytmusicapi.type_alias module
+ytmusicapi.ytmusic module
+YTMusic
+YTMusicBase
+YTMusicBase.as_mobile()
+YTMusicBase.base_headers
+YTMusicBase.headers
+YTMusicBase.proxies
+Module contents
+LikeStatus
+LikeStatus.DISLIKE
+LikeStatus.INDIFFERENT
+LikeStatus.LIKE
+OAuthCredentials
+OAuthCredentials.client_id
+OAuthCredentials.client_secret
+OAuthCredentials.get_code()
+OAuthCredentials.refresh_token()
+OAuthCredentials.token_from_code()
+YTMusic
+setup()
+setup_oauth() and add the "weeks best album" section with Man's Best Friend by Sabrina Carpenter for the number 1 place with animated rainbow particles that shoot out when hovered, here is the cover: mansbestfriend.jpeg that i uploaded and it is this playlist for the music: https://music.youtube.com/browse/MPREb_msfRVJDqlXJ and you can search songs. use gemini for the ai and call the midnight ai "brayGPT" and it talks in a slang lowercase tone and talks about anything package com.example;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.genai.Client;
+import com.google.genai.ResponseStream;
+import com.google.genai.types.*;
+import com.google.gson.Gson;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.mime.MimeTypes;
+
+public class App {
+  static void saveBinaryFile(String fileName, byte[] content) {
+    try {
+      FileOutputStream out = new FileOutputStream(fileName);
+      out.write(content);
+      out.close();
+      System.out.println("Saved file: " + fileName);
+    } catch (IOException e) {
+        System.out.println(e.getMessage());
+    }
+  }
+
+  public static void main(String[] args) {
+    String apiKey = System.getenv("GEMINI_API_KEY");
+    Client client = Client.builder().apiKey(apiKey).build();
+    Gson gson = new Gson();
+    MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
+
+
+    String model = "gemini-2.5-flash-image-preview";
+    List<Content> contents = ImmutableList.of(
+      Content.builder()
+        .role("user")
+        .parts(ImmutableList.of(
+          Part.fromText("INSERT_INPUT_HERE")
+        ))
+        .build()
+    );
+    GenerateContentConfig config =
+      GenerateContentConfig
+      .builder()
+      .responseModalities(ImmutableList.of(
+          "IMAGE",
+          "TEXT"
+      ))
+      .build();
+
+    ResponseStream<GenerateContentResponse> responseStream = client.models.generateContentStream(model, contents, config);
+
+    for (GenerateContentResponse res : responseStream) {
+      if (res.candidates().isEmpty() || res.candidates().get().get(0).content().isEmpty() || res.candidates().get().get(0).content().get().parts().isEmpty()) {
+        continue;
+      }
+
+      List<Part> parts = res.candidates().get().get(0).content().get().parts().get();
+      for (Part part : parts) {
+        if (part.inlineData().isPresent()) {
+          String fileName = "ENTER_FILE_NAME";
+          Blob inlineData = part.inlineData().get();
+          String fileExtension;
+          try {
+            fileExtension = allTypes.forName(inlineData.mimeType().orElse("")).getExtension();
+          } catch (MimeTypeException e) {
+            fileExtension = "";
+          }
+          saveBinaryFile(fileName + "." + fileExtension, inlineData.data().get());
+        }
+        else {
+          System.out.println(part.text());
+        }
+      }
+    }
+
+    responseStream.close();
+  }
+}
+ curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent" \
+  -H 'Content-Type: application/json' \
+  -H 'X-goog-api-key: GEMINI_API_KEY' \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": "Explain how AI works in a few words"
+          }
+        ]
+      }
+    ]
+  }' api key AIzaSyCZR8bAh0hJ3Sax0CaPa6fokMzgTuBotOk and these are all the games you need to make a description and title for in the games category: 1/  
+1v1lol/  
+1v1space/  
+10-minutes-till-dawn/  
+100ng/  
+2048-multitask/  
+2048/  
+9007199254740992/  
+DogeMiner/  
+HexGL/  
+OfflineParadise/  
+Stickman-Survival/  
+a-dance-of-fire-and-..../  
+achievementunlocked/  
+adarkroom/  
+adrenalinechallenge/  
+adventure-drivers/  
+ages-of-conflict/  
+alienhominid/  
+align-4/  
+amidst-the-clouds/  
+among-us/  
+angry-sharks/  
+aquapark-slides/  
+astray/  
+avalanche/  
+awesometanks2/  
+backrooms/  
+bad-ice-cream-2/  
+bad-ice-cream-3/  
+bad-ice-cream/  
+baldis-basics/  
+ball-dodge/  
+ballistic-chickens/  
+basket-random/  
+basketball-stars/  
+basketbros-io/  
+battleforgondor/  
+bigredbutton/  
+bitlife/  
+blacholesquare/  
+blackknight/  
+bloonstd/  
+bloonstd2/  
+bloxors/  
+bntts/  
+bobtherobber2/  
+boxhead2play/  
+boxing-random/  
+breakingthebank/  
+btts/  
+burger-and-frights/  
+cannon-basketball-4/  
+canyondefense/  
+captcha/  
+cars-simulator/  
+cell-machine/  
+champion-island/  
+championarcher/  
+chill-radio/  
+chrome-dino/  
+circlo/  
+cluster-rush/  
+cnpingpong/  
+connect3/  
+cookie-clicker/  
+core-ball/  
+craftmine/  
+creativekillchamber/  
+crossyroad/  
+csgo-clicker/  
+ctr-holiday/  
+ctr-tr/  
+ctr/  
+cubefield/  
+cupcake2048/  
+dante/  
+deal-or-no-deal/  
+death-run-3d/  
+defend-the-tank/  
+doctor-acorn2/  
+doge2048/  
+doodle-jump/  
+doublewires/  
+dragon-vs-bricks/  
+draw-the-hill/  
+drift-boss/  
+drift-hunters/  
+drive-mad/  
+ducklife1/  
+ducklife2/  
+ducklife3/  
+ducklife4/  
+edge-surf/  
+edgenotfound/  
+eel-slap/  
+elasticman/  
+endlesswar3/  
+escapingtheprison/  
+evil-glitch/  
+evolution/  
+exo/  
+factoryballs/  
+fairsquares/  
+fake-virus/  
+fancypantsadventures/  
+fireboywatergirlfore..../  
+flappy-2048/  
+flappy-bird/  
+flappybird/  
+flashtetris/  
+flippy-fish/  
+fnaw/  
+fridaynightfunkin/  
+froggys-battle/  
+fruitninja/  
+frying-nemo/  
+game-inside/  
+generic-fishing-game/  
+geodash/  
+georgeandtheprinter/  
+getaway-shootout/  
+gimme-the-airpod/  
+glass-city/  
+go-ball/  
+goodnight/  
+google-feud/  
+google-snake/  
+gravity-soccer/  
+greybox/  
+grindcraft/  
+hackertype/  
+haidarisawesome/  
+handshakes/  
+happy-hop/  
+hba/  
+helicopter/  
+hexempire/  
+hextris/  
+hungry-lamu/  
+idle-breakout/  
+idle-shark/  
+imgs/  
+impossiblequiz/  
+interactivebuddy/  
+jetpack-joyride/  
+js/  
+just-fall/  
+just-one-boss/  
+kitchen-gun-game/  
+kittencannon/  
+knife-master/  
+krunker/  
+learntofly/  
+learntofly2/  
+madalin-stunt-cars-2/  
+madalin-stunt-cars-3/  
+mario/  
+marvinspectrum/  
+matrixrampage/  
+meme2048/  
+merge-round-racers/  
+mineblocks/  
+minecraft-15/  
+minecraft-18/  
+minecraft-classic/  
+minecraftbeta/  
+minesweeper/  
+miniputt/  
+missiles/  
+motox3m-pool/  
+motox3m-spooky/  
+motox3m-winter/  
+motox3m/  
+motox3m2/  
+my-rusty-submarine/  
+n-gon/  
+ninja/  
+ninjavsevilcorp/  
+noob-steve-parkour/  
+ns-shaft/  
+nsresurgence/  
+om-bounce/  
+ovo/  
+pandemic2/  
+papasburgeria/  
+papaspizzaria/  
+paperio2/  
+papery-planes/  
+particle-clicker/  
+physibox/  
+pixel-gun-survival/  
+polybranch/  
+popcat-classic/  
+portalflash/  
+precision-client/  
+protektor/  
+proxy/  
+push-the-square/  
+push-your-luck/  
+rabbit-samurai/  
+rabbit-samurai2/  
+resent-client/  
+retro-bowl/  
+riddleschool/  
+riddleschool2/  
+riddleschool3/  
+riddleschool4/  
+riddleschool5/  
+riddletransfer/  
+riddletransfer2/  
+rolling-forests/  
+rolly-vortex/  
+rooftop-snipers/  
+ruffle/  
+run3/  
+sand-game/  
+sandboxels/  
+santy-is-home/  
+scrapmetal/  
+shellshockers/  
+shotinthedark/  
+shuttledeck/  
+sky-car-stunt/  
+sleepingbeauty/  
+slime-rush-td/  
+slope-2/  
+slope-ball/  
+slope/  
+sm64/  
+smashkarts/  
+smokingbarrels/  
+snowbattle/  
+soccer-random/  
+soccer-skills/  
+soldier-legend/  
+solitaire/  
+sort-the-court/  
+soundboard/  
+space-company/  
+spacegarden/  
+spinningrat/  
+stack-bump-3d/  
+stack/  
+starve/  
+station-141/  
+stealingthediamond/  
+stick-archers/  
+stick-duel-battle/  
+stick-merge/  
+stickman-boost/  
+stickman-golf/  
+stickman-hook/  
+stickwar/  
+stormthehouse2/  
+subway-surfers-ny/  
+subway-surfers/  
+superhot/  
+supermarioconstruct/  
+surviv/  
+sushi-unroll/  
+swerve/  
+synesthesia/  
+tactical-weapon-pack-2/  
+tacticalassasin2/  
+tank-trouble-2/  
+tanuki-sunset/  
+temple-run-2/  
+the-final-earth/  
+the-hotel/  
+thebattle/  
+theheist/  
+there-is-no-game/  
+thisistheonlylevel/  
+tiny-fishing/  
+tiny-islands/  
+tosstheturtle/  
+townscaper/  
+tube-jumpers/  
+tunnel-rush/  
+tv-static/  
+twitch-tetris/  
+veloce/  
+vex3/  
+vex4/  
+vex5/  
+vex6/  
+vex7/  
+wallsmash/  
+waterworks/  
+weavesilk/  
+webgl-fluid-simulation/  
+webretro/  
+win-the-whitehouse/  
+wolf3d/  
+wordle/  
+worlds-hardest-game-2/  
+worlds-hardest-game/  
+x-trial-racing/  
+xx142-b2exe/  
+yoshifabrication/  
+you-are-bezos/  
+zombs-royale/  
