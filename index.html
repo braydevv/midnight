@@ -75,9 +75,89 @@
       
       <!-- Sidebar Footer -->
       <div class="sidebar-footer">
-        <div class="footer-icon"><i class="fas fa-th"></i></div>
-        <div class="footer-icon"><i class="fab fa-discord"></i></div>
-        <div class="footer-icon"><i class="fas fa-bell"></i></div>
+        <div class="footer-button" data-popup="apps">
+          <i class="fas fa-th"></i>
+        </div>
+        <div class="footer-button" data-popup="social">
+          <i class="fab fa-discord"></i>
+        </div>
+        <div class="footer-button" data-popup="notifications">
+          <i class="fas fa-bell"></i>
+        </div>
+      </div>
+      
+      <!-- Popups -->
+      <div class="popup-overlay" id="popup-overlay"></div>
+      
+      <!-- Apps Popup -->
+      <div class="popup" id="apps-popup">
+        <div class="popup-header">
+          <h3>apps</h3>
+          <button class="popup-close">&times;</button>
+        </div>
+        <div class="popup-content">
+          <div class="app-grid">
+            <div class="app-item">
+              <i class="fas fa-calculator"></i>
+              <span>calculator</span>
+            </div>
+            <div class="app-item">
+              <i class="fas fa-calendar"></i>
+              <span>calendar</span>
+            </div>
+            <div class="app-item">
+              <i class="fas fa-file-alt"></i>
+              <span>notes</span>
+            </div>
+            <div class="app-item">
+              <i class="fas fa-camera"></i>
+              <span>camera</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Social Popup -->
+      <div class="popup" id="social-popup">
+        <div class="popup-header">
+          <h3>social</h3>
+          <button class="popup-close">&times;</button>
+        </div>
+        <div class="popup-content">
+          <div class="social-links">
+            <a href="#" class="social-link">
+              <i class="fab fa-discord"></i>
+              <span>discord</span>
+            </a>
+            <a href="#" class="social-link">
+              <i class="fab fa-twitter"></i>
+              <span>twitter</span>
+            </a>
+            <a href="#" class="social-link">
+              <i class="fab fa-instagram"></i>
+              <span>instagram</span>
+            </a>
+            <a href="#" class="social-link">
+              <i class="fab fa-youtube"></i>
+              <span>youtube</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Extras Popup -->
+      <div class="popup" id="notifications-popup">
+        <div class="popup-header">
+          <h3>extras</h3>
+          <button class="popup-close">&times;</button>
+        </div>
+        <div class="popup-content">
+          <div class="coming-soon-message">
+            <i class="fas fa-tools"></i>
+            <h3>coming soon</h3>
+            <p>we're working on some exciting new features for you!</p>
+          </div>
+        </div>
       </div>
     </nav>
     

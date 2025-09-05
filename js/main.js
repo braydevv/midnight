@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
   initThemeSystem();
   initSidebar();
   initSnowEffect();
+  initRainEffect();
+  initSpaceEffect();
   
   // Initialize page-specific functionality based on current page
   const currentPage = getCurrentPage();
@@ -44,7 +46,7 @@ function initThemeSystem() {
 // Set theme by adding appropriate class to body
 function setTheme(theme) {
   // Remove all theme classes
-  document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green', 'theme-tan');
+  document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green', 'theme-tan', 'theme-mystery');
   
   // Add selected theme class if not default
   if (theme !== 'default') {
@@ -53,6 +55,14 @@ function setTheme(theme) {
   
   // Save to localStorage
   localStorage.setItem('midnight-theme', theme);
+  
+  // Special handling for mystery theme
+  if (theme === 'mystery') {
+    // Enable snow for Christmas theme
+    localStorage.setItem('midnight-snow-enabled', 'true');
+    // Reinitialize snow effect
+    initSnowEffect();
+  }
 }
 
 // Initialize sidebar functionality
@@ -74,42 +84,170 @@ function initSidebar() {
   if (activeLink) {
     activeLink.classList.add('active');
   }
+  
+  // Initialize popup functionality
+  initPopups();
 }
 
-// Initialize snow effect
+// Initialize popup functionality
+function initPopups() {
+  const footerButtons = document.querySelectorAll('.footer-button');
+  const popupOverlay = document.getElementById('popup-overlay');
+  const popupCloseButtons = document.querySelectorAll('.popup-close');
+  
+  // Open popup when footer button is clicked
+  footerButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const popupId = this.getAttribute('data-popup');
+      const popup = document.getElementById(`${popupId}-popup`);
+      
+      if (popup) {
+        openPopup(popup);
+      }
+    });
+  });
+  
+  // Close popup when close button is clicked
+  popupCloseButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      closeAllPopups();
+    });
+  });
+  
+  // Close popup when overlay is clicked
+  if (popupOverlay) {
+    popupOverlay.addEventListener('click', function() {
+      closeAllPopups();
+    });
+  }
+  
+  // Close popup when escape key is pressed
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeAllPopups();
+    }
+  });
+}
+
+// Open popup
+function openPopup(popup) {
+  const overlay = document.getElementById('popup-overlay');
+  
+  // Close any existing popups
+  closeAllPopups();
+  
+  // Show overlay and popup
+  overlay.classList.add('active');
+  popup.classList.add('active');
+  
+  // Prevent body scroll
+  document.body.style.overflow = 'hidden';
+}
+
+// Close all popups
+function closeAllPopups() {
+  const overlay = document.getElementById('popup-overlay');
+  const popups = document.querySelectorAll('.popup');
+  
+  overlay.classList.remove('active');
+  popups.forEach(popup => {
+    popup.classList.remove('active');
+  });
+  
+  // Restore body scroll
+  document.body.style.overflow = '';
+}
+
+// Initialize particle effects
 function initSnowEffect() {
+  // Check if snow is enabled in settings
+  const snowEnabled = localStorage.getItem('midnight-snow-enabled') !== 'false';
+  if (!snowEnabled) return;
+  
   const snowflakesCount = 50; // Number of snowflakes
   const container = document.body;
   
   // Create snowflakes
   for (let i = 0; i < snowflakesCount; i++) {
-    let snowflake = document.createElement('div');
-    snowflake.classList.add('snowflake');
-    
-    // Random size between 2px and 5px
-    const size = Math.random() * 3 + 2;
-    snowflake.style.width = `${size}px`;
-    snowflake.style.height = `${size}px`;
-    
-    // Random starting position
-    snowflake.style.left = `${Math.random() * 100}vw`;
-    snowflake.style.top = `${Math.random() * 100}vh`;
-    
-    // Random opacity
-    snowflake.style.opacity = Math.random() * 0.7 + 0.3;
-    
-    // Add to container
-    container.appendChild(snowflake);
-    
-    // Animate snowflake
-    animateSnowflake(snowflake);
+    createSnowflake(container);
   }
+  
+  // Continuously create new snowflakes
+  setInterval(() => {
+    if (localStorage.getItem('midnight-snow-enabled') !== 'false') {
+      createSnowflake(container);
+    }
+  }, 2000); // Create new snowflake every 2 seconds
+}
+
+// Initialize rain effect
+function initRainEffect() {
+  const rainEnabled = localStorage.getItem('midnight-rain-enabled') === 'true';
+  if (!rainEnabled) return;
+  
+  const container = document.body;
+  
+  // Create rain drops
+  for (let i = 0; i < 100; i++) {
+    createRainDrop(container);
+  }
+  
+  // Continuously create new rain drops
+  setInterval(() => {
+    if (localStorage.getItem('midnight-rain-enabled') === 'true') {
+      createRainDrop(container);
+    }
+  }, 100); // Create new rain drop every 100ms
+}
+
+// Initialize space particles
+function initSpaceEffect() {
+  const spaceEnabled = localStorage.getItem('midnight-space-enabled') === 'true';
+  if (!spaceEnabled) return;
+  
+  const container = document.body;
+  
+  // Create space particles
+  for (let i = 0; i < 30; i++) {
+    createSpaceParticle(container);
+  }
+  
+  // Continuously create new space particles
+  setInterval(() => {
+    if (localStorage.getItem('midnight-space-enabled') === 'true') {
+      createSpaceParticle(container);
+    }
+  }, 3000); // Create new space particle every 3 seconds
+}
+
+// Create individual snowflake
+function createSnowflake(container) {
+  let snowflake = document.createElement('div');
+  snowflake.classList.add('snowflake');
+  
+  // Random size between 2px and 5px
+  const size = Math.random() * 3 + 2;
+  snowflake.style.width = `${size}px`;
+  snowflake.style.height = `${size}px`;
+  
+  // Start from top of screen
+  snowflake.style.left = `${Math.random() * 100}vw`;
+  snowflake.style.top = '-10px';
+  
+  // Random opacity
+  snowflake.style.opacity = Math.random() * 0.7 + 0.3;
+  
+  // Add to container
+  container.appendChild(snowflake);
+  
+  // Animate snowflake
+  animateSnowflake(snowflake);
 }
 
 // Animate individual snowflake
 function animateSnowflake(snowflake) {
-  // Random duration between 10 and 30 seconds
-  const duration = Math.random() * 20 + 10;
+  // Random duration between 8 and 15 seconds
+  const duration = Math.random() * 7 + 8;
   // Random horizontal movement
   const horizontalMovement = Math.random() * 10 - 5; // -5 to 5
   
@@ -125,15 +263,13 @@ function animateSnowflake(snowflake) {
     const progress = (timestamp - start) / (duration * 1000);
     
     if (progress >= 1) {
-      // Reset snowflake to top when it reaches bottom
-      snowflake.style.left = `${Math.random() * 100}vw`;
-      snowflake.style.top = '-10px';
-      animateSnowflake(snowflake);
+      // Remove snowflake when it reaches bottom
+      snowflake.remove();
       return;
     }
     
     // Calculate new position
-    const newTop = startingTop + (progress * 100); // Move down
+    const newTop = startingTop + (progress * 110); // Move down past viewport
     const newLeft = startingLeft + (Math.sin(progress * 5) * horizontalMovement); // Slight horizontal movement
     
     // Apply new position
@@ -145,6 +281,107 @@ function animateSnowflake(snowflake) {
   }
   
   requestAnimationFrame(moveSnowflake);
+}
+
+// Create individual rain drop
+function createRainDrop(container) {
+  let rainDrop = document.createElement('div');
+  rainDrop.classList.add('rain-drop');
+  
+  // Random size and speed
+  const width = Math.random() * 2 + 1;
+  const height = Math.random() * 20 + 10;
+  const speed = Math.random() * 3 + 2;
+  
+  rainDrop.style.width = `${width}px`;
+  rainDrop.style.height = `${height}px`;
+  rainDrop.style.left = `${Math.random() * 100}vw`;
+  rainDrop.style.top = '-20px';
+  rainDrop.style.background = 'linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.6))';
+  rainDrop.style.position = 'fixed';
+  rainDrop.style.pointerEvents = 'none';
+  rainDrop.style.zIndex = '9999';
+  
+  container.appendChild(rainDrop);
+  animateRainDrop(rainDrop, speed);
+}
+
+// Animate individual rain drop
+function animateRainDrop(rainDrop, speed) {
+  const duration = (100 + Math.random() * 50) / speed; // Duration based on speed
+  const startTime = Date.now();
+  
+  function moveRainDrop() {
+    const elapsed = Date.now() - startTime;
+    const progress = elapsed / (duration * 1000);
+    
+    if (progress >= 1) {
+      rainDrop.remove();
+      return;
+    }
+    
+    const newTop = -20 + (progress * 120); // Move down past viewport
+    rainDrop.style.top = `${newTop}vh`;
+    
+    requestAnimationFrame(moveRainDrop);
+  }
+  
+  requestAnimationFrame(moveRainDrop);
+}
+
+// Create individual space particle
+function createSpaceParticle(container) {
+  let particle = document.createElement('div');
+  particle.classList.add('space-particle');
+  
+  // Random size and position
+  const size = Math.random() * 3 + 1;
+  const x = Math.random() * 100;
+  const y = Math.random() * 100;
+  
+  particle.style.width = `${size}px`;
+  particle.style.height = `${size}px`;
+  particle.style.left = `${x}vw`;
+  particle.style.top = `${y}vh`;
+  particle.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%)';
+  particle.style.position = 'fixed';
+  particle.style.pointerEvents = 'none';
+  particle.style.zIndex = '9998';
+  particle.style.borderRadius = '50%';
+  
+  container.appendChild(particle);
+  animateSpaceParticle(particle);
+}
+
+// Animate individual space particle
+function animateSpaceParticle(particle) {
+  const duration = Math.random() * 10 + 5; // 5-15 seconds
+  const startTime = Date.now();
+  const startX = parseFloat(particle.style.left);
+  const startY = parseFloat(particle.style.top);
+  
+  function moveParticle() {
+    const elapsed = Date.now() - startTime;
+    const progress = elapsed / (duration * 1000);
+    
+    if (progress >= 1) {
+      particle.remove();
+      return;
+    }
+    
+    // Slow drift movement
+    const newX = startX + Math.sin(progress * Math.PI) * 10;
+    const newY = startY + Math.cos(progress * Math.PI) * 5;
+    const opacity = 0.8 - (progress * 0.8);
+    
+    particle.style.left = `${newX}vw`;
+    particle.style.top = `${newY}vh`;
+    particle.style.opacity = opacity;
+    
+    requestAnimationFrame(moveParticle);
+  }
+  
+  requestAnimationFrame(moveParticle);
 }
 
 // Initialize page-specific functionality
@@ -184,16 +421,21 @@ function initHomepage() {
   loadFeaturedGames();
 }
 
-// Initialize clock with flip animation
+// Initialize clock with fade animation
 function initClock() {
   const clockElement = document.querySelector('.clock');
   if (!clockElement) return;
   
-  // Initial clock setup
-  updateClock();
+  // Check if mystery theme is active
+  const currentTheme = localStorage.getItem('midnight-theme');
   
-  // Update clock every second
-  setInterval(updateClock, 1000);
+  if (currentTheme === 'mystery') {
+    initChristmasCountdown();
+  } else {
+    // Regular clock
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
   
   // Update date
   const dateElement = document.querySelector('.date');
@@ -203,19 +445,87 @@ function initClock() {
   }
 }
 
-// Update clock display with flip animation
+// Initialize Christmas countdown
+function initChristmasCountdown() {
+  const clockElement = document.querySelector('.clock');
+  if (!clockElement) return;
+  
+  // Replace clock content with countdown
+  clockElement.innerHTML = `
+    <div class="christmas-countdown">
+      <div class="countdown-title">days until christmas</div>
+      <div class="countdown-days" id="countdown-days">0</div>
+      <div class="countdown-time" id="countdown-time">00:00:00</div>
+    </div>
+  `;
+  
+  // Update countdown
+  updateChristmasCountdown();
+  setInterval(updateChristmasCountdown, 1000);
+}
+
+// Update Christmas countdown
+function updateChristmasCountdown() {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const christmas = new Date(currentYear, 11, 25); // December 25
+  
+  // If Christmas has passed this year, get next year's Christmas
+  if (now > christmas) {
+    christmas.setFullYear(currentYear + 1);
+  }
+  
+  const timeDiff = christmas - now;
+  
+  if (timeDiff > 0) {
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+    
+    const daysElement = document.getElementById('countdown-days');
+    const timeElement = document.getElementById('countdown-time');
+    
+    if (daysElement) {
+      daysElement.textContent = days;
+    }
+    
+    if (timeElement) {
+      timeElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+  } else {
+    // Christmas is here!
+    const daysElement = document.getElementById('countdown-days');
+    const timeElement = document.getElementById('countdown-time');
+    
+    if (daysElement) {
+      daysElement.textContent = '0';
+    }
+    
+    if (timeElement) {
+      timeElement.textContent = 'merry christmas!';
+    }
+  }
+}
+
+// Update clock display with fade animation
 function updateClock() {
   const now = new Date();
-  const hours = String(now.getHours()).padStart(2, '0');
+  let hours = now.getHours();
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
   
-  const timeString = `${hours}:${minutes}:${seconds}`;
+  // Convert to 12-hour format
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 0 should be 12
+  const hoursStr = String(hours).padStart(2, '0');
+  
   const clockDigits = document.querySelectorAll('.clock-digit');
   
   if (clockDigits.length === 6) { // 6 digits (HH:MM:SS)
-    updateDigit(clockDigits[0], hours[0]);
-    updateDigit(clockDigits[1], hours[1]);
+    updateDigit(clockDigits[0], hoursStr[0]);
+    updateDigit(clockDigits[1], hoursStr[1]);
     updateDigit(clockDigits[2], minutes[0]);
     updateDigit(clockDigits[3], minutes[1]);
     updateDigit(clockDigits[4], seconds[0]);
@@ -223,7 +533,7 @@ function updateClock() {
   }
 }
 
-// Update individual digit with flip animation
+// Update individual digit with fade animation
 function updateDigit(digitElement, newValue) {
   const currentValue = digitElement.getAttribute('data-value');
   
@@ -231,23 +541,20 @@ function updateDigit(digitElement, newValue) {
   if (currentValue !== newValue) {
     const flipElement = digitElement.querySelector('.clock-flip');
     
-    // Set new back face value before flipping
-    const backFace = flipElement.querySelector('.clock-flip-back');
-    backFace.textContent = newValue;
+    // Set new value
+    const frontFace = flipElement.querySelector('.clock-flip-front');
+    frontFace.textContent = newValue;
     
-    // Trigger flip animation
-    flipElement.classList.add('flipped');
+    // Trigger fade animation
+    flipElement.classList.add('fade-in');
     
     // After animation completes
     setTimeout(() => {
-      // Update front face and reset flip
-      const frontFace = flipElement.querySelector('.clock-flip-front');
-      frontFace.textContent = newValue;
-      flipElement.classList.remove('flipped');
+      flipElement.classList.remove('fade-in');
       
       // Update stored value
       digitElement.setAttribute('data-value', newValue);
-    }, 500); // Match the CSS transition duration
+    }, 300); // Match the CSS transition duration
   }
 }
 
@@ -351,39 +658,8 @@ function loadGames() {
   const gamesContainer = document.querySelector('.games-grid');
   if (!gamesContainer) return;
   
-  // Sample games data
-  const games = [
-    {
-      title: 'cosmic adventure',
-      description: 'explore the universe in this exciting space adventure game.',
-      image: 'https://images.unsplash.com/photo-1614732414444-096e5f1122d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      title: 'pixel warriors',
-      description: 'battle in retro-style arenas with unique pixel characters.',
-      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      title: 'speed racer',
-      description: 'race against time in this high-speed driving simulator.',
-      image: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      title: 'puzzle master',
-      description: 'test your brain with challenging puzzles and riddles.',
-      image: 'https://images.unsplash.com/photo-1553481187-be93c21490a9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      title: 'zombie survival',
-      description: 'survive the apocalypse in this thrilling action game.',
-      image: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      title: 'treasure hunter',
-      description: 'find hidden treasures in ancient temples and ruins.',
-      image: 'https://images.unsplash.com/photo-1523867574998-1a336b6ded04?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    }
-  ];
+  // Use external games data
+  const games = GAMES_DATA;
   
   // Clear container
   gamesContainer.innerHTML = '';
@@ -397,11 +673,21 @@ function loadGames() {
       <div class="game-card-content">
         <h3 class="game-card-title">${game.title}</h3>
         <p class="game-card-description">${game.description}</p>
-        <button class="game-card-button">play</button>
+        <button class="game-card-button" data-game-url="${game.url}">play</button>
       </div>
     `;
     
     gamesContainer.appendChild(gameElement);
+  });
+  
+  // Add click handlers for game buttons
+  gamesContainer.addEventListener('click', function(e) {
+    if (e.target.classList.contains('game-card-button')) {
+      const gameUrl = e.target.getAttribute('data-game-url');
+      if (gameUrl) {
+        window.open(gameUrl, '_blank');
+      }
+    }
   });
 }
 
@@ -410,21 +696,64 @@ function initSearchFunctionality(searchSelector, itemSelector) {
   const searchInput = document.querySelector(searchSelector);
   if (!searchInput) return;
   
-  searchInput.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const items = document.querySelectorAll(itemSelector);
-    
-    items.forEach(item => {
-      const title = item.querySelector('h3').textContent.toLowerCase();
-      const description = item.querySelector('p').textContent.toLowerCase();
+  if (searchSelector === '.movies-search') {
+    // Special handling for movie search with TMDB API
+    let searchTimeout;
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      const searchTerm = this.value.trim();
       
-      if (title.includes(searchTerm) || description.includes(searchTerm)) {
-        item.style.display = '';
-      } else {
-        item.style.display = 'none';
+      if (searchTerm.length >= 2) {
+        searchTimeout = setTimeout(() => {
+          searchMovies(searchTerm);
+        }, 500); // Debounce search
+      } else if (searchTerm.length === 0) {
+        // Show popular movies when search is empty
+        loadMoviesFromTMDB();
       }
     });
-  });
+  } else {
+    // Regular search for other pages
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const items = document.querySelectorAll(itemSelector);
+      
+      items.forEach(item => {
+        const title = item.querySelector('h3').textContent.toLowerCase();
+        const description = item.querySelector('p').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  }
+}
+
+// Search movies using TMDB API
+async function searchMovies(query) {
+  const moviesContainer = document.querySelector('.movies-grid');
+  if (!moviesContainer) return;
+  
+  try {
+    // Show loading state
+    moviesContainer.innerHTML = '<div class="loading-message">searching movies...</div>';
+    
+    // Search movies
+    const response = await fetch(`${TMDB_BASE_URL}/search/movie?api_key=${TMDB_API_KEY}&language=en-US&query=${encodeURIComponent(query)}&page=1`);
+    const data = await response.json();
+    
+    if (data.results && data.results.length > 0) {
+      displayMovies(data.results);
+    } else {
+      moviesContainer.innerHTML = '<div class="no-results">no movies found for your search.</div>';
+    }
+  } catch (error) {
+    console.error('Error searching movies:', error);
+    moviesContainer.innerHTML = '<div class="error-message">failed to search movies. please try again later.</div>';
+  }
 }
 
 // Browser page initialization
@@ -652,38 +981,44 @@ function initBrowserNavigation() {
 
 // Movies page initialization
 function initMoviesPage() {
-  loadMovies();
+  loadMoviesFromTMDB();
   initSearchFunctionality('.movies-search', '.movie-card');
+  initMovieModal();
 }
 
-// Load movies data
-function loadMovies() {
+// TMDB API configuration
+const TMDB_API_KEY = 'ae44ac985c819a5af8acb1e6564645bf';
+const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+
+// Load movies from TMDB API
+async function loadMoviesFromTMDB() {
   const moviesContainer = document.querySelector('.movies-grid');
   if (!moviesContainer) return;
   
-  // Sample movies data
-  const movies = [
-    {
-      title: 'space odyssey',
-      description: 'a journey through the cosmos and beyond.',
-      image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      title: 'midnight chase',
-      description: 'a thrilling action movie with unexpected twists.',
-      image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      title: 'lost in time',
-      description: 'a time travel adventure that will keep you on the edge of your seat.',
-      image: 'https://images.unsplash.com/photo-1501700493788-fa1a4fc9fe62?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-    },
-    {
-      title: 'the last frontier',
-      description: 'explore the unknown in this sci-fi epic.',
-      image: 'https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+  try {
+    // Show loading state
+    moviesContainer.innerHTML = '<div class="loading-message">loading movies...</div>';
+    
+    // Fetch popular movies
+    const response = await fetch(`${TMDB_BASE_URL}/movie/popular?api_key=${TMDB_API_KEY}&language=en-US&page=1`);
+    const data = await response.json();
+    
+    if (data.results) {
+      displayMovies(data.results);
+    } else {
+      throw new Error('Failed to fetch movies');
     }
-  ];
+  } catch (error) {
+    console.error('Error loading movies:', error);
+    moviesContainer.innerHTML = '<div class="error-message">failed to load movies. please try again later.</div>';
+  }
+}
+
+// Display movies in the grid
+function displayMovies(movies) {
+  const moviesContainer = document.querySelector('.movies-grid');
+  if (!moviesContainer) return;
   
   // Clear container
   moviesContainer.innerHTML = '';
@@ -692,59 +1027,188 @@ function loadMovies() {
   movies.forEach(movie => {
     const movieElement = document.createElement('div');
     movieElement.classList.add('card', 'movie-card');
+    movieElement.setAttribute('data-movie-id', movie.id);
+    movieElement.style.cursor = 'pointer';
+    
+    const posterUrl = movie.poster_path 
+      ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}`
+      : 'https://via.placeholder.com/300x450/333/fff?text=No+Image';
+    
     movieElement.innerHTML = `
-      <img src="${movie.image}" alt="${movie.title}" class="movie-card-image">
+      <img src="${posterUrl}" alt="${movie.title}" class="movie-card-image">
       <div class="game-card-content">
         <h3 class="game-card-title">${movie.title}</h3>
-        <p class="game-card-description">${movie.description}</p>
-        <button class="game-card-button">watch</button>
+        <p class="game-card-description">${movie.overview ? movie.overview.substring(0, 100) + '...' : 'no description available'}</p>
+        <button class="game-card-button movie-detail-btn" data-movie-id="${movie.id}">view details</button>
       </div>
     `;
     
+    // Add click handler to play movie directly
+    movieElement.addEventListener('click', function(e) {
+      if (!e.target.classList.contains('movie-detail-btn')) {
+        playMovie(movie.id);
+      }
+    });
+    
     moviesContainer.appendChild(movieElement);
   });
+}
+
+// Initialize movie modal functionality
+function initMovieModal() {
+  const modal = document.getElementById('movie-modal');
+  const closeBtn = document.querySelector('.movie-modal-close');
+  
+  // Close modal when close button is clicked
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMovieModal);
+  }
+  
+  // Close modal when clicking outside
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeMovieModal();
+      }
+    });
+  }
+  
+  // Close modal with escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+      closeMovieModal();
+    }
+  });
+  
+  // Handle movie detail button clicks
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('movie-detail-btn')) {
+      const movieId = e.target.getAttribute('data-movie-id');
+      if (movieId) {
+        showMovieDetails(movieId);
+      }
+    }
+  });
+  
+  // Handle watch now button clicks
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('movie-watch-button')) {
+      const movieId = e.target.getAttribute('data-movie-id');
+      if (movieId) {
+        openMoviePlayer(movieId);
+      }
+    }
+  });
+  
+  // Initialize movie player modal
+  initMoviePlayerModal();
+}
+
+// Show movie details in modal
+async function showMovieDetails(movieId) {
+  const modal = document.getElementById('movie-modal');
+  if (!modal) return;
+  
+  try {
+    // Show loading state
+    modal.classList.add('active');
+    document.getElementById('movie-modal-title').textContent = 'loading...';
+    
+    // Fetch movie details
+    const response = await fetch(`${TMDB_BASE_URL}/movie/${movieId}?api_key=${TMDB_API_KEY}&language=en-US`);
+    const movie = await response.json();
+    
+    if (movie) {
+      // Update modal content
+      document.getElementById('movie-modal-title').textContent = movie.title;
+      document.getElementById('movie-modal-overview').textContent = movie.overview || 'no overview available';
+      document.getElementById('movie-modal-release-date').textContent = movie.release_date || 'unknown';
+      document.getElementById('movie-modal-rating').textContent = movie.vote_average ? `${movie.vote_average}/10` : 'no rating';
+      document.getElementById('movie-modal-genres').textContent = movie.genres ? movie.genres.map(g => g.name).join(', ') : 'unknown';
+      document.getElementById('movie-modal-runtime').textContent = movie.runtime ? `${movie.runtime} minutes` : 'unknown';
+      
+      // Update poster
+      const posterUrl = movie.poster_path 
+        ? `${TMDB_IMAGE_BASE_URL}${movie.poster_path}`
+        : 'https://via.placeholder.com/300x450/333/fff?text=No+Image';
+      document.getElementById('movie-modal-poster').src = posterUrl;
+      document.getElementById('movie-modal-poster').alt = movie.title;
+      
+      // Update watch button with movie ID
+      const watchButton = document.getElementById('movie-watch-btn');
+      if (watchButton) {
+        watchButton.setAttribute('data-movie-id', movieId);
+      }
+    }
+  } catch (error) {
+    console.error('Error loading movie details:', error);
+    document.getElementById('movie-modal-title').textContent = 'error loading movie details';
+  }
+}
+
+// Close movie modal
+function closeMovieModal() {
+  const modal = document.getElementById('movie-modal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
 }
 
 // Music page initialization
 function initMusicPage() {
   loadMusic();
   initSearchFunctionality('.music-search', '.music-card');
+  initMusicPlayer();
+  initFeaturedAlbum();
 }
+
+// YouTube API variables
+let youtubePlayer = null;
+let currentPlaylist = [];
+let currentTrackIndex = 0;
+let isPlaying = false;
 
 // Load music data
 function loadMusic() {
   const musicContainer = document.querySelector('.music-grid');
   if (!musicContainer) return;
   
-  // Sample music data
+  // Sample music data with YouTube video IDs
   const music = [
     {
       title: 'electronic dreams',
       artist: 'synthwave collective',
-      image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+      image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      videoId: 'dQw4w9WgXcQ' // Sample video ID
     },
     {
       title: 'midnight vibes',
       artist: 'chill beats',
-      image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+      image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      videoId: 'dQw4w9WgXcQ'
     },
     {
       title: 'urban rhythm',
       artist: 'city sounds',
-      image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+      image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      videoId: 'dQw4w9WgXcQ'
     },
     {
       title: 'acoustic journey',
       artist: 'string quartet',
-      image: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+      image: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      videoId: 'dQw4w9WgXcQ'
     }
   ];
+  
+  // Set current playlist
+  currentPlaylist = music;
   
   // Clear container
   musicContainer.innerHTML = '';
   
   // Add music to container
-  music.forEach(track => {
+  music.forEach((track, index) => {
     const musicElement = document.createElement('div');
     musicElement.classList.add('card', 'music-card');
     musicElement.innerHTML = `
@@ -752,12 +1216,176 @@ function loadMusic() {
       <div class="game-card-content">
         <h3 class="game-card-title">${track.title}</h3>
         <p class="game-card-description">${track.artist}</p>
-        <button class="game-card-button">play</button>
+        <button class="game-card-button music-play-btn" data-index="${index}">play</button>
       </div>
     `;
     
     musicContainer.appendChild(musicElement);
   });
+}
+
+// Initialize music player
+function initMusicPlayer() {
+  // Load YouTube API
+  if (!window.YT) {
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
+  
+  // Set up player controls
+  const playBtn = document.getElementById('play-btn');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const volumeSlider = document.getElementById('volume-slider');
+  const progressBar = document.querySelector('.progress-bar');
+  
+  if (playBtn) {
+    playBtn.addEventListener('click', togglePlay);
+  }
+  
+  if (prevBtn) {
+    prevBtn.addEventListener('click', previousTrack);
+  }
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', nextTrack);
+  }
+  
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', setVolume);
+  }
+  
+  if (progressBar) {
+    progressBar.addEventListener('click', seekTo);
+  }
+  
+  // Handle music play button clicks
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('music-play-btn')) {
+      const index = parseInt(e.target.getAttribute('data-index'));
+      playTrack(index);
+    }
+  });
+}
+
+// Initialize featured album
+function initFeaturedAlbum() {
+  const featuredAlbumPlay = document.querySelector('.featured-album-play');
+  if (featuredAlbumPlay) {
+    featuredAlbumPlay.addEventListener('click', function() {
+      // Play the featured album (Sabrina Carpenter - Man's Best Friend)
+      // This would typically load a playlist of songs from the album
+      console.log('Playing featured album: Man\'s Best Friend by Sabrina Carpenter');
+    });
+  }
+}
+
+// YouTube API ready callback
+window.onYouTubeIframeAPIReady = function() {
+  youtubePlayer = new YT.Player('youtube-player', {
+    height: '0',
+    width: '0',
+    playerVars: {
+      'playsinline': 1,
+      'controls': 0,
+      'showinfo': 0,
+      'rel': 0
+    },
+    events: {
+      'onReady': onPlayerReady,
+      'onStateChange': onPlayerStateChange
+    }
+  });
+};
+
+// Player ready callback
+function onPlayerReady(event) {
+  console.log('YouTube player ready');
+}
+
+// Player state change callback
+function onPlayerStateChange(event) {
+  const playBtn = document.getElementById('play-btn');
+  const playIcon = playBtn.querySelector('i');
+  
+  if (event.data === YT.PlayerState.PLAYING) {
+    isPlaying = true;
+    playIcon.className = 'fas fa-pause';
+  } else {
+    isPlaying = false;
+    playIcon.className = 'fas fa-play';
+  }
+}
+
+// Play track
+function playTrack(index) {
+  if (!youtubePlayer || !currentPlaylist[index]) return;
+  
+  currentTrackIndex = index;
+  const track = currentPlaylist[index];
+  
+  // Update player display
+  document.getElementById('player-cover').src = track.image;
+  document.getElementById('player-title').textContent = track.title;
+  document.getElementById('player-artist').textContent = track.artist;
+  
+  // Load and play video
+  youtubePlayer.loadVideoById(track.videoId);
+  youtubePlayer.playVideo();
+}
+
+// Toggle play/pause
+function togglePlay() {
+  if (!youtubePlayer) return;
+  
+  if (isPlaying) {
+    youtubePlayer.pauseVideo();
+  } else {
+    youtubePlayer.playVideo();
+  }
+}
+
+// Previous track
+function previousTrack() {
+  if (currentTrackIndex > 0) {
+    playTrack(currentTrackIndex - 1);
+  } else {
+    playTrack(currentPlaylist.length - 1);
+  }
+}
+
+// Next track
+function nextTrack() {
+  if (currentTrackIndex < currentPlaylist.length - 1) {
+    playTrack(currentTrackIndex + 1);
+  } else {
+    playTrack(0);
+  }
+}
+
+// Set volume
+function setVolume() {
+  const volume = document.getElementById('volume-slider').value;
+  if (youtubePlayer) {
+    youtubePlayer.setVolume(volume);
+  }
+}
+
+// Seek to position
+function seekTo(event) {
+  if (!youtubePlayer) return;
+  
+  const progressBar = event.currentTarget;
+  const rect = progressBar.getBoundingClientRect();
+  const clickX = event.clientX - rect.left;
+  const percentage = clickX / rect.width;
+  
+  const duration = youtubePlayer.getDuration();
+  const newTime = duration * percentage;
+  
+  youtubePlayer.seekTo(newTime);
 }
 
 // AI page initialization
@@ -768,8 +1396,8 @@ function initAIPage() {
   
   if (!aiInput || !aiSend || !aiMessages) return;
   
-  // Add welcome message
-  addAIMessage('hello! i\'m your midnight assistant. how can i help you today?');
+  // Add welcome message from brayGPT
+  addAIMessage('yo what\'s good! i\'m braygpt, your midnight ai homie. what you tryna do today?');
   
   // Send button click
   aiSend.addEventListener('click', sendMessage);
@@ -783,7 +1411,7 @@ function initAIPage() {
   });
   
   // Function to send message
-  function sendMessage() {
+  async function sendMessage() {
     const message = aiInput.value.trim();
     if (!message) return;
     
@@ -793,19 +1421,19 @@ function initAIPage() {
     // Clear input
     aiInput.value = '';
     
-    // Simulate AI response (in a real app, this would call an API)
-    setTimeout(() => {
-      const responses = [
-        'i\'m here to help you navigate midnight. what would you like to know?',
-        'that\'s an interesting question! let me think about that.',
-        'you can explore games, movies, and more using the sidebar navigation.',
-        'try checking out the featured games on the homepage!',
-        'is there anything specific you\'d like to know about midnight?'
-      ];
-      
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-      addAIMessage(randomResponse);
-    }, 1000);
+    // Show typing indicator
+    const typingIndicator = addTypingIndicator();
+    
+    try {
+      // Call Gemini API
+      const response = await callGeminiAPI(message);
+      removeTypingIndicator(typingIndicator);
+      addAIMessage(response);
+    } catch (error) {
+      removeTypingIndicator(typingIndicator);
+      addAIMessage('yo my bad, something went wrong. try again in a sec?');
+      console.error('Gemini API error:', error);
+    }
   }
   
   // Function to add user message
@@ -829,6 +1457,61 @@ function initAIPage() {
     // Scroll to bottom
     aiMessages.scrollTop = aiMessages.scrollHeight;
   }
+  
+  // Function to add typing indicator
+  function addTypingIndicator() {
+    const typingElement = document.createElement('div');
+    typingElement.classList.add('ai-message', 'assistant', 'typing');
+    typingElement.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+    aiMessages.appendChild(typingElement);
+    aiMessages.scrollTop = aiMessages.scrollHeight;
+    return typingElement;
+  }
+  
+  // Function to remove typing indicator
+  function removeTypingIndicator(typingElement) {
+    if (typingElement) {
+      typingElement.remove();
+    }
+  }
+}
+
+// Call Gemini API
+async function callGeminiAPI(message) {
+  const GEMINI_API_KEY = 'AIzaSyCZR8bAh0hJ3Sax0CaPa6fokMzgTuBotOk';
+  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+  
+  const prompt = `you are braygpt, a cool ai assistant for the midnight website. respond in a casual, lowercase, slang-filled way. be helpful but keep it real. user said: ${message}`;
+  
+  const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      contents: [
+        {
+          parts: [
+            {
+              text: prompt
+            }
+          ]
+        }
+      ]
+    })
+  });
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  
+  if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+    return data.candidates[0].content.parts[0].text;
+  } else {
+    throw new Error('Invalid response from Gemini API');
+  }
 }
 
 // Settings page initialization
@@ -842,5 +1525,165 @@ function initSettingsPage() {
   const themeOption = document.querySelector(`.theme-option[data-theme="${savedTheme}"]`);
   if (themeOption) {
     themeOption.classList.add('active');
+  }
+  
+  // Initialize particle effect toggles
+  initParticleToggles();
+}
+
+// Initialize particle effect toggles
+function initParticleToggles() {
+  // Snow toggle
+  const snowToggle = document.getElementById('snow-toggle');
+  if (snowToggle) {
+    snowToggle.checked = localStorage.getItem('midnight-snow-enabled') !== 'false';
+    snowToggle.addEventListener('change', function() {
+      localStorage.setItem('midnight-snow-enabled', this.checked);
+      if (this.checked) {
+        initSnowEffect();
+      } else {
+        // Remove all snowflakes
+        document.querySelectorAll('.snowflake').forEach(snowflake => snowflake.remove());
+      }
+    });
+  }
+  
+  // Rain toggle
+  const rainToggle = document.getElementById('rain-toggle');
+  if (rainToggle) {
+    rainToggle.checked = localStorage.getItem('midnight-rain-enabled') === 'true';
+    rainToggle.addEventListener('change', function() {
+      localStorage.setItem('midnight-rain-enabled', this.checked);
+      if (this.checked) {
+        initRainEffect();
+      } else {
+        // Remove all rain drops
+        document.querySelectorAll('.rain-drop').forEach(drop => drop.remove());
+      }
+    });
+  }
+  
+  // Space toggle
+  const spaceToggle = document.getElementById('space-toggle');
+  if (spaceToggle) {
+    spaceToggle.checked = localStorage.getItem('midnight-space-enabled') === 'true';
+    spaceToggle.addEventListener('change', function() {
+      localStorage.setItem('midnight-space-enabled', this.checked);
+      if (this.checked) {
+        initSpaceEffect();
+      } else {
+        // Remove all space particles
+        document.querySelectorAll('.space-particle').forEach(particle => particle.remove());
+      }
+    });
+  }
+}
+
+// Initialize movie player modal
+function initMoviePlayerModal() {
+  const playerModal = document.getElementById('movie-player-modal');
+  const closeBtn = document.getElementById('movie-player-close');
+  const providerSelect = document.getElementById('movie-provider-select');
+  
+  // Close player modal when close button is clicked
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeMoviePlayer);
+  }
+  
+  // Close player modal when clicking overlay
+  if (playerModal) {
+    playerModal.addEventListener('click', function(e) {
+      if (e.target === playerModal || e.target.classList.contains('movie-player-overlay')) {
+        closeMoviePlayer();
+      }
+    });
+  }
+  
+  // Close player modal with escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && playerModal && playerModal.classList.contains('active')) {
+      closeMoviePlayer();
+    }
+  });
+  
+  // Handle provider selection change
+  if (providerSelect) {
+    providerSelect.addEventListener('change', function() {
+      const movieId = this.getAttribute('data-movie-id');
+      if (movieId && this.value !== 'coming-soon') {
+        updateMoviePlayer(movieId, this.value);
+      }
+    });
+  }
+}
+
+// Play movie function (as requested)
+function playMovie(tmdbId) {
+  const playerModal = document.getElementById('movie-player-modal');
+  const providerSelect = document.getElementById('movie-provider-select');
+  
+  if (!playerModal) return;
+  
+  // Set movie ID for provider selection
+  if (providerSelect) {
+    providerSelect.setAttribute('data-movie-id', tmdbId);
+  }
+  
+  // Get movie title from the clicked movie card
+  const movieCard = document.querySelector(`[data-movie-id="${tmdbId}"]`);
+  const movieTitle = movieCard ? movieCard.querySelector('.game-card-title').textContent : 'Movie';
+  document.getElementById('movie-player-title').textContent = movieTitle;
+  
+  // Show player modal
+  playerModal.classList.add('active');
+  document.body.classList.add('movie-player-active');
+  
+  // Load movie with default provider (embed.su)
+  updateMoviePlayer(tmdbId, 'embed.su');
+}
+
+// Open movie player (for watch now button)
+function openMoviePlayer(movieId) {
+  playMovie(movieId);
+}
+
+// Update movie player with selected provider
+function updateMoviePlayer(movieId, provider) {
+  const iframe = document.getElementById('movie-player-iframe');
+  if (!iframe) return;
+  
+  let embedUrl = '';
+  
+  switch (provider) {
+    case 'embed.su':
+      embedUrl = `https://embed.su/embed/movie/${movieId}`;
+      break;
+    case '2embed':
+      embedUrl = `https://www.2embed.cc/embed/${movieId}`;
+      break;
+    case 'vidsrc':
+      embedUrl = `https://vidsrc.to/embed/movie/${movieId}`;
+      break;
+    default:
+      embedUrl = 'about:blank';
+  }
+  
+  iframe.src = embedUrl;
+}
+
+// Close movie player
+function closeMoviePlayer() {
+  const playerModal = document.getElementById('movie-player-modal');
+  const iframe = document.getElementById('movie-player-iframe');
+  
+  if (playerModal) {
+    playerModal.classList.remove('active');
+  }
+  
+  document.body.classList.remove('movie-player-active');
+  
+  // Stop video by clearing iframe src
+  if (iframe) {
+    iframe.src = 'about:blank';
   }
 }

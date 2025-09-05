@@ -93,50 +93,59 @@
         <p class="page-description">listen to your favorite tracks</p>
       </div>
       
+      <!-- Weeks Best Album Section -->
+      <section class="weeks-best-album">
+        <h2 class="card-title">weeks best album</h2>
+        <div class="featured-album" id="featured-album">
+          <img src="mansbestfriend.jpeg" alt="Man's Best Friend" class="featured-album-cover">
+          <div class="featured-album-info">
+            <h3 class="featured-album-title">man's best friend</h3>
+            <p class="featured-album-artist">sabrina carpenter</p>
+            <p class="featured-album-description">the #1 album this week with amazing tracks and incredible vibes</p>
+            <button class="featured-album-play">play album</button>
+          </div>
+        </div>
+      </section>
+      
       <!-- Search Bar -->
       <div class="search-container">
         <input type="text" class="search-bar music-search" placeholder="search music...">
       </div>
       
+      <!-- Music Player -->
+      <div class="music-player" id="music-player">
+        <div class="player-info">
+          <img id="player-cover" src="" alt="Album Cover" class="player-cover">
+          <div class="player-details">
+            <h4 id="player-title">no song selected</h4>
+            <p id="player-artist">-</p>
+          </div>
+        </div>
+        <div class="player-controls">
+          <button id="prev-btn" class="player-btn"><i class="fas fa-step-backward"></i></button>
+          <button id="play-btn" class="player-btn play-btn"><i class="fas fa-play"></i></button>
+          <button id="next-btn" class="player-btn"><i class="fas fa-step-forward"></i></button>
+        </div>
+        <div class="player-progress">
+          <span id="current-time">0:00</span>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <span id="total-time">0:00</span>
+        </div>
+        <div class="player-volume">
+          <i class="fas fa-volume-up"></i>
+          <input type="range" id="volume-slider" min="0" max="100" value="50">
+        </div>
+      </div>
+      
       <!-- Music Grid -->
       <div class="grid music-grid">
         <!-- Music will be loaded via JavaScript -->
-        <div class="card music-card">
-          <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Electronic Dreams" class="music-card-image">
-          <div class="game-card-content">
-            <h3 class="game-card-title">electronic dreams</h3>
-            <p class="game-card-description">synthwave collective</p>
-            <button class="game-card-button">play</button>
-          </div>
-        </div>
-        
-        <div class="card music-card">
-          <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Midnight Vibes" class="music-card-image">
-          <div class="game-card-content">
-            <h3 class="game-card-title">midnight vibes</h3>
-            <p class="game-card-description">chill beats</p>
-            <button class="game-card-button">play</button>
-          </div>
-        </div>
-        
-        <div class="card music-card">
-          <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Urban Rhythm" class="music-card-image">
-          <div class="game-card-content">
-            <h3 class="game-card-title">urban rhythm</h3>
-            <p class="game-card-description">city sounds</p>
-            <button class="game-card-button">play</button>
-          </div>
-        </div>
-        
-        <div class="card music-card">
-          <img src="https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Acoustic Journey" class="music-card-image">
-          <div class="game-card-content">
-            <h3 class="game-card-title">acoustic journey</h3>
-            <p class="game-card-description">string quartet</p>
-            <button class="game-card-button">play</button>
-          </div>
-        </div>
       </div>
+      
+      <!-- YouTube Player (Hidden) -->
+      <div id="youtube-player" style="display: none;"></div>
     </main>
   </div>
   

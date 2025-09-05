@@ -98,20 +98,13 @@
         <div class="settings-section">
           <h2 class="settings-title">theme</h2>
           <div class="theme-options">
-            <div class="theme-option theme-default active" data-theme="default">
-              <span class="theme-name">default</span>
-            </div>
-            <div class="theme-option theme-pink" data-theme="pink">
-              <span class="theme-name">pink</span>
-            </div>
-            <div class="theme-option theme-blue" data-theme="blue">
-              <span class="theme-name">blue</span>
-            </div>
-            <div class="theme-option theme-green" data-theme="green">
-              <span class="theme-name">green</span>
-            </div>
-            <div class="theme-option theme-tan" data-theme="tan">
-              <span class="theme-name">tan</span>
+            <div class="theme-option theme-default active" data-theme="default" title="default"></div>
+            <div class="theme-option theme-pink" data-theme="pink" title="pink"></div>
+            <div class="theme-option theme-blue" data-theme="blue" title="blue"></div>
+            <div class="theme-option theme-green" data-theme="green" title="green"></div>
+            <div class="theme-option theme-tan" data-theme="tan" title="tan"></div>
+            <div class="theme-option theme-mystery" data-theme="mystery" title="mystery">
+              <i class="fas fa-question"></i>
             </div>
           </div>
         </div>
@@ -123,7 +116,25 @@
             <div class="setting-label">snow effect</div>
             <div class="setting-control">
               <label class="toggle-switch">
-                <input type="checkbox" checked>
+                <input type="checkbox" id="snow-toggle" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-label">rain effect</div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input type="checkbox" id="rain-toggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-label">space particles</div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input type="checkbox" id="space-toggle">
                 <span class="toggle-slider"></span>
               </label>
             </div>
