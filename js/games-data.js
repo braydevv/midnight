@@ -15,11 +15,11 @@ const GAMES_DATA = [
     url: '/midnight/g/space-waves'
   },
   {
-    id: 'tetris',
-    title: 'tetris',
-    description: 'classic block-stacking puzzle game that challenges your spatial reasoning skills.',
-    image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    url: 'https://tetris.io'
+    id: 'monkey-mart',
+    title: 'monkey mart',
+    description: 'help the monkey run a busy market, stock shelves, and serve customers.',
+    image: 'https://1games.io/data/image/game/monkey-mart.jpg',
+    url: '/midnight/g/monkey-mart'
   },
   {
     id: 'snake',
