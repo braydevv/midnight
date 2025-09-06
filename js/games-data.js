@@ -8,11 +8,11 @@ const GAMES_DATA = [
     url: '/midnight/g/bad-parenting'
   },
   {
-    id: '2048',
-    title: '2048',
-    description: 'combine numbered tiles to reach the elusive 2048 tile in this addictive puzzle game.',
-    image: 'https://images.unsplash.com/photo-1553481187-be93c21490a9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    url: 'https://2048.io'
+    id: 'space-waves',
+    title: 'space waves',
+    description: 'ride the waves of space, dodge obstacles, and chase the highest score.',
+    image: 'https://imgs.crazygames.com/space-waves_16x9/20241203031650/space-waves_16x9-cover?metadata=none&quality=100&width=1200&height=630&fit=crop',
+    url: '/midnight/g/space-waves'
   },
   {
     id: 'tetris',
