@@ -1,11 +1,11 @@
 // Games data for the midnight website
 const GAMES_DATA = [
   {
-    id: 'slope',
-    title: 'slope',
-    description: 'navigate a ball down an endless slope while avoiding obstacles and collecting gems.',
-    image: 'https://images.unsplash.com/photo-1614732414444-096e5f1122d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    url: 'https://slope.io'
+    id: 'bad-parenting',
+    title: 'bad parenting',
+    description: 'bad parenting is a funny game where you make bad choices as a parent and see what happens.',
+    image: 'https://m.media-amazon.com/images/M/MV5BMzUyMjM4NmUtMWU5MS00MjJhLTlkZmUtYmM0OGIyMWQ5MTRlXkEyXkFqcGc@._V1_QL75_UY281_CR0,0,500,281_.jpg',
+    url: '/midnight/g/bad-parenting'
   },
   {
     id: '2048',
