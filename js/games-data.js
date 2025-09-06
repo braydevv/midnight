@@ -29,32 +29,32 @@ const GAMES_DATA = [
     url: '/midnight/g/hill-climb-racing'
   },
   {
-    id: 'pacman',
-    title: 'pac-man',
-    description: 'navigate through mazes while eating dots and avoiding ghosts in this arcade classic.',
-    image: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    url: 'https://pacman.io'
+    id: 'crazy-cars',
+    title: 'crazy cars',
+    description: 'race fast cars through wild tracks and dodge obstacles.',
+    image: 'https://play-lh.googleusercontent.com/6C2xlwUSqWrcWa-25Ir1mMzGnjnoShLcxhrWkL8pBuGFS6aqZpDOqDpe09dHsSQQinE=w526-h296-rw',
+    url: '/midnight/g/crazy-cars'
   },
   {
-    id: 'space-invaders',
-    title: 'space invaders',
-    description: 'defend earth from waves of alien invaders in this retro shooting game.',
-    image: 'https://images.unsplash.com/photo-1523867574998-1a336b6ded04?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    url: 'https://spaceinvaders.io'
+    id: 'dreadhead-parkour',
+    title: 'dreadhead parkour',
+    description: 'jump, flip, and run through tricky parkour levels.',
+    image: 'https://i.ytimg.com/vi/_bxWHYcv4UA/maxresdefault.jpg',
+    url: '/midnight/g/dreadhead-parkour'
   },
   {
-    id: 'pong',
-    title: 'pong',
-    description: 'classic table tennis simulation that started the video game revolution.',
-    image: 'https://images.unsplash.com/photo-1553481187-be93c21490a9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    url: 'https://pong.io'
+    id: 'fnaf',
+    title: 'fnaf',
+    description: 'survive the night and watch out for haunted animatronics.',
+    image: 'https://image.api.playstation.com/vulcan/img/cfn/11307beluGq0SO4-dqIevRAKnuYU-hs2n9oqxsSitAxewEH8dX32eH6cDSt29sMFte8lQEG-2CvTYaGGEllg0vS6jsECJJGo.png',
+    url: '/midnight/g/fnaf'
   },
   {
-    id: 'asteroids',
-    title: 'asteroids',
-    description: 'destroy floating space rocks while avoiding collisions in this arcade shooter.',
-    image: 'https://images.unsplash.com/photo-1614732414444-096e5f1122d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    url: 'https://asteroids.io'
+    id: 'geometry-dash',
+    title: 'geometry dash',
+    description: 'jump and fly through rhythm based levels full of spikes and obstacles.',
+    image: 'https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/322170/capsule_616x353.jpg?t=1703006148',
+    url: '/midnight/g/geometry-dash'
   },
   {
     id: 'breakout',
