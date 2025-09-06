@@ -22,11 +22,11 @@ const GAMES_DATA = [
     url: '/midnight/g/monkey-mart'
   },
   {
-    id: 'snake',
-    title: 'snake',
+    id: 'hill-climb-racing',
+    title: 'hill climb racing',
     description: 'control a growing snake to collect food while avoiding walls and your own tail.',
-    image: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    url: 'https://snake.io'
+    image: 'https://store-images.microsoft.com/image/apps.18483.9007199266379485.0000ad5a-1400-4539-b79a-62b2b9248545.0ac4e475-8d4b-42bb-8723-14576cb8e50a?h=1280',
+    url: '/midnight/g/hill-climb-racing'
   },
   {
     id: 'pacman',
